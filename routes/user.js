@@ -1,11 +1,11 @@
-const Permissions = require("../constants/Permissions");
+const Permissions = require("../constants/Permission");
 const {
   RegisterUser,
   LoginUser,
   createRole,
   deleteRole,
 } = require("../controller/user_controller");
-const { authentication } = require("../middleware/auth");
+// const { authentication } = require("../middleware/auth");
 
 const router = require("express").Router();
 
@@ -14,37 +14,41 @@ router.post("/login", (req, res) => {
   LoginUser(req, res);
 });
 
+router.get('/register',  (req ,res) => {
+  res.render('register')
+})
+
 router.post("/register", (req, res) => {
   RegisterUser(req, res);
 });
 
-router.post("/role/create", authentication, async (req, res) => {
-  const user = await authorization(req);
-  const canAccess = await checkPermission(user.role,Permissions.CREATE_ROLE);
-  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
-  createRole(req, res);
-});
+// router.post("/role/create", authentication, async (req, res) => {
+//   const user = await authorization(req);
+//   const canAccess = await checkPermission(user.role,Permissions.CREATE_ROLE);
+//   if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+//   createRole(req, res);
+// });
 
-router.delete('/role/delete/:role_id', authentication, async (req , res) => {
-  const user = await authorization(req);
-  const canAccess = await checkPermission(user.role,Permissions.DELETE_ROLE);
-  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
-  deleteRole(req, res);
+// router.delete('/role/delete/:role_id', authentication, async (req , res) => {
+//   const user = await authorization(req);
+//   const canAccess = await checkPermission(user.role,Permissions.DELETE_ROLE);
+//   if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+//   deleteRole(req, res);
   
-})
+// })
 
-router.post('/role/add', authentication, async (req, res) => {
-  const user = await authorization(req);
-  const canAccess = await checkPermission(user.role,Permissions.ADD_ROLE);
-  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
-  addRole(req, res);
-});
+// router.post('/role/add', authentication, async (req, res) => {
+//   const user = await authorization(req);
+//   const canAccess = await checkPermission(user.role,Permissions.ADD_ROLE);
+//   if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+//   addRole(req, res);
+// });
 
-router.post('/role/remove/:user_id', authentication , async (req , res) => {
-   const user = await authorization(req);
-  const canAccess = await checkPermission(user.role,Permissions.REMOVE_ROLE);
-  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
-  removeRole(req,res)
-})
+// router.post('/role/remove/:user_id', authentication , async (req , res) => {
+//    const user = await authorization(req);
+//   const canAccess = await checkPermission(user.role,Permissions.REMOVE_ROLE);
+//   if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+//   removeRole(req,res)
+// })
 
 module.exports = router;

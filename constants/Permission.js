@@ -1,0 +1,15 @@
+const Permissions = {
+    ADMINISTRATOR: "ADMINISTRATOR",
+
+    CREATE_PRODUCTS: "CREATE_PRODUCTS",
+    CREATE_VARIANT: "CREATE_VARIANT",
+
+    CREATE_ROLE: "CREATE_ROLE",
+    DELETE_ROLE: "DELETE_ROLE",
+    ADD_ROLE: "ADD_ROLE",
+    REMOVE_ROLE: "REMOVE_ROLE",
+
+    VIEW_LOGS: "VIEW_LOGS",
+};
+
+module.exports = Permissions;

@@ -1,7 +1,6 @@
 const db = require("../database/connection");
 const bcrypt = require("bcrypt");
 const logger = require("../services/logger");
-const jwt = require("jsonwebtoken");
 const mailler = require("../services/mailler");
 require("dotenv").config();
 
@@ -131,16 +130,7 @@ async function LoginUser(req, res) {
 
     const roles = await get_user_role(user);
 
-    const token = await jwt.sign(
-      {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: [roles],
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    req.session.user = {id : user.id , username : user.username , email : user.email , roles : roles}
 
     const log = new logger(
       "info",

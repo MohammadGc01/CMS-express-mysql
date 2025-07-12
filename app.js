@@ -18,11 +18,14 @@ app.use(session({
     cookie: { secure: true }
 }))
 
+app.get('/', (req , res) => {
+    res.render('home')
+})
 app.use('/user', user_api)
 
 app.use((req, res) => {
     res.send("404")
 })
 app.listen(3000, () => {
-    console.log("app start port 3000");
+    console.log("app start http://localhost:3000/");
 })

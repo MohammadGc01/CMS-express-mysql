@@ -1,0 +1,13 @@
+@font-face {
+    font-family: vazir;
+    src: url('../fonts/Vazir-Bold.ttf');
+}
+
+
+*{
+    font-family: vazir;
+}
+
+body {
+    background-color: #242222d7 !important;
+}

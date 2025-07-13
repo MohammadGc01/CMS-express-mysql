@@ -4,13 +4,16 @@ require('dotenv').config();
 const app = express()
 const body_parser = require('body-parser')
 const user_api = require('./routes/user')
-
-
+const index_api = require('./routes/index')
+const path = require('path')
+const fs = require('fs');
 app.set('views', __dirname + '/views')
 app.set('view engine', 'ejs')
 app.use(body_parser.urlencoded({ extended: true }))
 app.use(body_parser.json())
-app.use(express.static('public'))
+
+app.use('/css', express.static(path.join(__dirname, 'public/css')));
+app.use('/js', express.static(path.join(__dirname, 'public/js')));
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -18,9 +21,7 @@ app.use(session({
     cookie: { secure: true }
 }))
 
-app.get('/', (req , res) => {
-    res.render('home')
-})
+app.use('/', index_api)
 app.use('/user', user_api)
 
 app.use((req, res) => {

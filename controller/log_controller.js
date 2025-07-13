@@ -8,21 +8,15 @@ function save_to_database(loglevel,message) {
     })
 }
 
-function get_logs(loglevel) {
+function get_logs(req , res) {
     let sql = "SELECT * FROM log"
-    let params = []
-
-    if (loglevel !== "all") {
-        sql += " WHERE loglevel = ?"
-        params.push(loglevel)
-    }
-
-    db.query(sql, params, (err, result) => {
+    db.query(sql, (err, result) => {
         if (err) {
             console.log("get log from db have error => " + err.message)
             return
         }
-        console.log("get log from db success =>", result.message)
+        console.log(result);
+      res.render('partials/logs', {logs : result})
     })
 }
 

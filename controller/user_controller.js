@@ -142,7 +142,6 @@ async function LoginUser(req, res) {
     res.json({
       success: true,
       message: "ورود با موفقیت انجام شد",
-      token: token,
     });
   });
 }

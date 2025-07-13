@@ -139,6 +139,14 @@ async function LoginUser(req, res) {
       `
     );
     await log.save();
+    const time = new Date().getTime()
+    const persianDateTime = new Intl.DateTimeFormat('fa-IR', {
+      dateStyle: 'full',
+      timeStyle: 'medium',
+    }).format(time);
+  
+    const mail = new mailler(user.email , "ورود موفقیت آمیز" ,`ورود شما موفقیت امیز بود  زمن ورود : ${persianDateTime}`);
+    await mail.send()
     res.json({
       success: true,
       message: "ورود با موفقیت انجام شد",

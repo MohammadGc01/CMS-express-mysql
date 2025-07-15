@@ -1,11 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="./css/auth.css" />
   <title>ورود / ثبت نام</title>
 </head>
-<body>
-  
+
+<body class="bg-dark text-white">
+
+  <div class="container py-5 d-flex justify-content-center">
+    <div class="w-100" style="max-width: 400px;">
+      <h2 class="text-center mb-4">ثبت نام / ورود</h2>
+      <form id="register_form" class="bg-light p-4 rounded shadow">
+
+        <div class="mb-3">
+          <label for="register_username" class="form-label text-dark">نام کاربری</label>
+          <div class="input-group">
+            <span class="input-group-text" id="username-addon"><i class="bi bi-person"></i></span>
+            <input type="text" class="form-control" id="register_username" placeholder="نام کاربری"
+              aria-label="نام کاربری" aria-describedby="username-addon" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="register_email" class="form-label text-dark">ایمیل</label>
+          <div class="input-group">
+            <span class="input-group-text" id="email-addon"><i class="bi bi-envelope"></i></span>
+            <input type="email" class="form-control" id="register_email" placeholder="ایمیل" aria-label="ایمیل"
+              aria-describedby="email-addon" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="register_password" class="form-label text-dark">کلمه عبور</label>
+          <input type="password" class="form-control" id="register_password" placeholder="کلمه عبور"
+            aria-label="کلمه عبور" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="register_password" class="form-label text-dark"> پسورد را دوباره وارد کنید </label>
+          <input type="password" class="form-control" id="register_password" placeholder="کلمه عبور"
+            aria-label="کلمه عبور" required>
+        </div>
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">ثبت نام / ورود</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

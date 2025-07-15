@@ -80,6 +80,9 @@
 </style>
 
 
+
+
+
 <script>
 async function get_category() {
   const dropdown_menu = document.getElementById('dropdown-menu')
@@ -91,8 +94,11 @@ const categorys = await result.json()
 categorys.forEach(category => {
   const item = document.createElement('li')
   const item_href = document.createElement('a')
+  const hr = document.createElement('hr')
+  hr.classList.add('dropdown-divider')
   item_href.classList.add('dropdown-item')
   item.appendChild(item_href)
+  item.appendChild(hr)
   dropdown_menu.appendChild(item)
   item_href.setAttribute('href', `/post/category/${category.name}`)
   item_href.innerText = category.name

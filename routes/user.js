@@ -10,7 +10,11 @@ const { authentication , authorization } = require("../middleware/auth");
 const router = require("express").Router();
 
 router.get('/auth',  (req ,res) => {
-  res.render('auth')
+ if(req.session.user){
+  res.redirect('/')
+ }else{
+   res.render('auth')
+ }
 })
 
 router.post("/login", (req, res) => {

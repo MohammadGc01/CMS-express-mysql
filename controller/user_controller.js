@@ -2,6 +2,7 @@ const db = require("../database/connection");
 const bcrypt = require("bcrypt");
 const logger = require("../services/logger");
 const mailler = require("../services/mailler");
+const session = require("express-session");
 require("dotenv").config();
 
 async function RegisterUser(req, res) {

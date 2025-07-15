@@ -1,7 +1,7 @@
 const db = require("../database/connection");
 
 function save_to_database(loglevel,message) {
-    const sql = "INSERT INTO log(loglevel,message) VALUES(?,?)"
+    const sql = "INSERT INTO logs(loglevel,logmessage) VALUES(?,?)"
     db.query(sql, [loglevel,message],(err,result)=> {
         if(err) return console.log("save log in db have error =>" + " " + err.message);
         console.log("save log in db success =>" + " " + result.message);
@@ -9,13 +9,12 @@ function save_to_database(loglevel,message) {
 }
 
 function get_logs(req , res) {
-    let sql = "SELECT * FROM log"
+    const sql = "SELECT * FROM logs"
     db.query(sql, (err, result) => {
         if (err) {
             console.log("get log from db have error => " + err.message)
             return
         }
-        console.log(result);
         res.json(result)
     //   res.render('partials/logs', {logs : result})
     })

@@ -16,11 +16,17 @@ app.use(body_parser.json())
 app.use('/css', express.static(path.join(__dirname, 'public/css')));
 app.use('/js', express.static(path.join(__dirname, 'public/js')));
 app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
-}))
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // حتماً در پروتکل https: true بشه
+    httpOnly: true,
+    sameSite: 'lax',
+    maxAge: 1000 * 60 * 60 * 24, // 1 روز
+  }
+}));
+
 
 app.use('/', index_api)
 app.use('/user', user_api)

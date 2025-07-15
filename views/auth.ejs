@@ -1,60 +1,198 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <title>ورود / ثبت‌نام</title>
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-  <link rel="stylesheet" href="./css/auth.css" />
-  <title>ورود / ثبت نام</title>
+
+  <!-- فونت فارسی -->
+  <style>
+    @font-face {
+      font-family: 'Vazir';
+      src: url('http://localhost:3000/css/Vazir-Bold.ttf') format('truetype');
+    }
+
+    * {
+      font-family: 'Vazir';
+    }
+
+    body {
+      background-color: #111;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-box {
+      background-color: #1a1a1a;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+      max-width: 420px;
+      width: 100%;
+    }
+
+    label {
+      color: #ddd;
+    }
+
+    .btn-primary {
+      background-color: #00bcd4;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #0097a7;
+    }
+
+    h2 {
+      color: #00e5ff;
+      margin-bottom: 20px;
+    }
+
+    .form-switcher {
+      text-align: center;
+      margin-top: 20px;
+      color: #ccc;
+    }
+
+    .form-switcher button {
+      background: none;
+      border: none;
+      color: #00e5ff;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
 </head>
+<body>
 
-<body class="bg-dark text-white">
+  <div class="form-box" id="form-container">
+    <!-- فرم ثبت‌نام به صورت پیش‌فرض -->
+    <h2 class="text-center">ثبت‌نام</h2>
+    <form id="register_form">
+      <div class="mb-3">
+        <label for="register_username" class="form-label">نام کاربری</label>
+        <input type="text" class="form-control" id="register_username" required />
+      </div>
+      <div class="mb-3">
+        <label for="register_email" class="form-label">ایمیل</label>
+        <input type="email" class="form-control" id="register_email" required />
+      </div>
+      <div class="mb-3">
+        <label for="register_password" class="form-label">رمز عبور</label>
+        <input type="password" class="form-control" id="register_password" required />
+      </div>
+      <div class="mb-3">
+        <label for="register_confirm_password" class="form-label">تکرار رمز عبور</label>
+        <input type="password" class="form-control" id="register_confirm_password" required />
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">ثبت‌نام</button>
+      </div>
+    </form>
 
-  <div class="container py-5 d-flex justify-content-center">
-    <div class="w-100" style="max-width: 400px;">
-      <h2 class="text-center mb-4">ثبت نام / ورود</h2>
-      <form id="register_form" class="bg-light p-4 rounded shadow">
-
-        <div class="mb-3">
-          <label for="register_username" class="form-label text-dark">نام کاربری</label>
-          <div class="input-group">
-            <span class="input-group-text" id="username-addon"><i class="bi bi-person"></i></span>
-            <input type="text" class="form-control" id="register_username" placeholder="نام کاربری"
-              aria-label="نام کاربری" aria-describedby="username-addon" required>
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="register_email" class="form-label text-dark">ایمیل</label>
-          <div class="input-group">
-            <span class="input-group-text" id="email-addon"><i class="bi bi-envelope"></i></span>
-            <input type="email" class="form-control" id="register_email" placeholder="ایمیل" aria-label="ایمیل"
-              aria-describedby="email-addon" required>
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="register_password" class="form-label text-dark">کلمه عبور</label>
-          <input type="password" class="form-control" id="register_password" placeholder="کلمه عبور"
-            aria-label="کلمه عبور" required>
-        </div>
-
-        <div class="mb-3">
-          <label for="register_password" class="form-label text-dark"> پسورد را دوباره وارد کنید </label>
-          <input type="password" class="form-control" id="register_password" placeholder="کلمه عبور"
-            aria-label="کلمه عبور" required>
-        </div>
-
-        <div class="d-grid">
-          <button type="submit" class="btn btn-primary">ثبت نام / ورود</button>
-        </div>
-      </form>
+    <div class="form-switcher">
+      <span>قبلاً ثبت‌نام کردی؟</span>
+      <button onclick="switchToLogin()">ورود</button>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+  <!-- Login Form Template (مخفی تا موقع نمایش) -->
+  <template id="login-template">
+    <h2 class="text-center">ورود</h2>
+    <form id="login_form">
+      <div class="mb-3">
+        <label for="login_email" class="form-label">ایمیل</label>
+        <input type="email" class="form-control" id="login_email" required />
+      </div>
+      <div class="mb-3">
+        <label for="login_password" class="form-label">رمز عبور</label>
+        <input type="password" class="form-control" id="login_password" required />
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">ورود</button>
+      </div>
+    </form>
 
+    <div class="form-switcher">
+      <span>اکانت نداری؟</span>
+      <button onclick="switchToRegister()">ثبت‌نام</button>
+    </div>
+  </template>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- فرم‌ها با fetch -->
+  <script>
+    // فرم ثبت‌نام
+    document.addEventListener('submit', async (event) => {
+      if (event.target.id === 'register_form') {
+        event.preventDefault();
+        const username = document.getElementById('register_username').value;
+        const email = document.getElementById('register_email').value;
+        const password = document.getElementById('register_password').value;
+        const confirm = document.getElementById('register_confirm_password').value;
+
+        if (password !== confirm) {
+          return alert('رمزها یکسان نیستند!');
+        }
+
+        try {
+          const res = await fetch('http://localhost:3000/user/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password })
+          });
+          const data = await res.json();
+          console.log(data);
+          alert('ثبت‌نام با موفقیت انجام شد!');
+        } catch (err) {
+          console.error(err);
+          alert('خطا در ثبت‌نام');
+        }
+      }
+    });
+
+    // فرم ورود
+    document.addEventListener('submit', async (event) => {
+      if (event.target.id === 'login_form') {
+        event.preventDefault();
+        const email = document.getElementById('login_email').value;
+        const password = document.getElementById('login_password').value;
+
+        try {
+          const res = await fetch('http://localhost:3000/user/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+          const data = await res.json();
+          console.log(data);
+          alert('ورود موفقیت‌آمیز بود!');
+        } catch (err) {
+          console.error(err);
+          alert('خطا در ورود');
+        }
+      }
+    });
+
+    // جابجایی فرم‌ها
+    function switchToLogin() {
+      const template = document.getElementById('login-template');
+      document.getElementById('form-container').innerHTML = template.innerHTML;
+    }
+
+    function switchToRegister() {
+      location.reload(); // ساده‌ترین راه
+    }
+  </script>
+</body>
 </html>

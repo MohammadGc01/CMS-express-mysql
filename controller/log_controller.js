@@ -16,7 +16,8 @@ function get_logs(req , res) {
             return
         }
         console.log(result);
-      res.render('partials/logs', {logs : result})
+        res.json(result)
+    //   res.render('partials/logs', {logs : result})
     })
 }
 

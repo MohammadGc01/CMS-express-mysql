@@ -19,17 +19,14 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
              <i class="bi bi-list"></i> دسته بندی 
           </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          <ul class="dropdown-menu" id="dropdown-menu">
+           
           </ul>
         </li>
         </ul>
         <ul class="d-flex">
           <li class="icon">
-             <a href="/login"><i class="bi bi-person"></i></a>
+             <a href="/user/auth"><i class="bi bi-person"></i></a>
           </li>
            <li class="icon">
             <i class="bi bi-search"></i>
@@ -81,3 +78,26 @@
     margin-right: 5px;
   }
 </style>
+
+
+<script>
+async function get_category() {
+  const dropdown_menu = document.getElementById('dropdown-menu')
+  const result = await fetch('http://localhost:3000/post/get/categorys',{
+  method : "GET",
+})
+ 
+const categorys = await result.json()
+categorys.forEach(category => {
+  const item = document.createElement('li')
+  const item_href = document.createElement('a')
+  item_href.classList.add('dropdown-item')
+  item.appendChild(item_href)
+  dropdown_menu.appendChild(item)
+  item_href.setAttribute('href', `/post/category/${category.name}`)
+  item_href.innerText = category.name
+});
+}
+
+get_category()
+</script>

@@ -11,10 +11,14 @@ const router = require("express").Router();
 
 router.get('/auth',  (req ,res) => {
  if(req.session.user){
-  res.redirect('/')
+  res.redirect('/user/panel')
  }else{
    res.render('auth')
  }
+})
+
+router.get('/panel', authentication, async (req , res) => {
+  res.render('user_panel')
 })
 
 router.post("/login", (req, res) => {

@@ -1,4 +1,4 @@
-const Permissions = require('../constants/Permissions');
+const Permission = require('../constants/Permission');
 const db = require('../database/connection');
 
 async function checkPermission(roleArray, PermissionsRequire) {
@@ -17,7 +17,7 @@ async function checkPermission(roleArray, PermissionsRequire) {
   });
 
   const permissions = rows.map(r => r.permission_name);
-if (permissions.includes(Permissions.ADMINISTRATOR)) {
+if (permissions.includes(Permission.ADMINISTRATOR)) {
   return true;
 }
 

@@ -7,6 +7,7 @@ const {
   updateProfile,
 } = require("../controller/user_controller");
 const { authentication , authorization } = require("../middleware/auth");
+const { checkPermission } = require("../middleware/checkPermission");
 
 const router = require("express").Router();
 

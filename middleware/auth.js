@@ -9,8 +9,7 @@ async function authorization(req) {
      return  res.status(401).json({ message: 'Unauthorized. Please log in to access this resource.' });
     }
 
-    const user = req.session.user;
-    return user
+    return req.session.user;
 }
 module.exports = {
     authentication,

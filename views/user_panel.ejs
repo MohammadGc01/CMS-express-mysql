@@ -69,7 +69,7 @@
     <!-- Sidebar -->
     <div class="col-md-3 col-lg-2 sidebar">
       <div class="profile-box">
-        <img src="/images/user.jpg" alt="پروفایل">
+        <img src="/images/user.jpg" alt="پروفایل" id="user_prof">
         <h6><%= user.username %></h6>
         <p style="font-size: 13px;"><%= user.email %></p>
       </div>
@@ -83,12 +83,33 @@
     </div>
 
     <!-- Main Content -->
-    <div class="col-md-9 col-lg-10 p-4">
-   
+    <div class="col-md-9 col-lg-10 p-4" id="MainContent">
+    
+      <template id="SettingTemplate">
+        <div class="container">
+       <form id="Update_Profile_form">
+        <input type="file" id="Profile_img">
+        <input type="submit" value="ذخیره">
+       </form>
+        </div>
+      </template>
 
     </div>
 
   </div>
 </div>
+<script>
+  document.getElementById('Update_Profile_form').addEventListener('submit', async (event) => {
+    event.preventDefault()
+    const img = document.getElementById('Profile_img').value
+  })
+
+
+  function changeSection(sectionid) {
+      const template = document.getElementById('SettingTemplate');
+      document.getElementById('form-container').innerHTML = template.innerHTML;
+    
+  }
+</script>
 </body>
 </html>

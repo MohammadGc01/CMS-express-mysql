@@ -1,13 +1,15 @@
 const router = require("express").Router();
 const path = require('path')
 const fs = require('fs');
-const { get_logs } = require("../controller/log_controller");
+
 
 router.get('/', (req , res) => {
     res.render('home')
 })
 
-
+router.get('/contactus', (req , res) => {
+   res.render('contactus')
+})
 
 router.get('/images/:name', (req , res) => {
    const image_path = path.resolve(__dirname , '../public/images')
@@ -17,8 +19,5 @@ router.get('/images/:name', (req , res) => {
     res.sendFile(full_path)
 })
 
-router.get('/logs', (req , res) => {
-    get_logs(req ,res)
-})
 
 module.exports = router

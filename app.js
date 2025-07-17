@@ -6,6 +6,7 @@ const body_parser = require('body-parser')
 const user_api = require('./routes/user')
 const post_api = require('./routes/post')
 const index_api = require('./routes/index')
+const contact_api = require('./routes/contact')
 const path = require('path')
 const fs = require('fs');
 app.set('views', __dirname + '/views')
@@ -28,7 +29,7 @@ app.use(session({
 app.use('/', index_api)
 app.use('/user', user_api)
 app.use('/post', post_api)
-
+app.use('/contactus', contact_api)
 app.use((req, res) => {
     res.send("404")
 })

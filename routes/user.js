@@ -58,4 +58,8 @@ router.post('/role/remove/:user_id', authentication , async (req , res) => {
   removeRole(req,res)
 })
 
+router.get('/contactus', (req , res) => {
+   res.render('contactus')
+})
+
 module.exports = router;

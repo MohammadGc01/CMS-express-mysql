@@ -14,13 +14,13 @@
           <a class="nav-link" href="#"> <i class="bi bi-people"></i> انجمن </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#"> <i class="bi bi-telephone"></i> ارتباط با ما </a>
+          <a class="nav-link" href="/contactus"> <i class="bi bi-telephone"></i> ارتباط با ما </a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-list"></i> دسته بندی
           </a>
-          <ul class="dropdown-menu" id="dropdown-menu">
+          <ul class="dropdown-menu " id="dropdown-menu">
 
           </ul>
         </li>
@@ -81,6 +81,39 @@
   .icon i {
     font-size: 20px;
     margin-right: 5px;
+  }
+
+    .dropdown-menu {
+    background-color: #111;
+    border-radius: 8px;
+    min-width: 200px;
+  }
+
+  .dropdown-item {
+    color: white !important;
+    transition: background 0.2s ease;
+    text-align: center;
+  }
+
+  .dropdown-item:hover {
+    background-color: aquamarine;
+    color: black !important;
+  }
+
+  @media (max-width: 768px) {
+    .navbar-nav {
+      margin-top: 15px;
+    }
+
+    .nav-link {
+      margin: 10px 0;
+    }
+
+    .navbar-icons {
+      justify-content: center;
+      width: 100%;
+      margin-top: 10px;
+    }
   }
 </style>
 

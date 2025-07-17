@@ -18,7 +18,7 @@ router.get('/auth',  (req ,res) => {
 })
 
 router.get('/panel', authentication, async (req , res) => {
-  res.render('user_panel')
+  res.render('user_panel', {user : req.session.user})
 })
 
 router.post("/login", (req, res) => {
@@ -62,4 +62,9 @@ router.get('/contactus', (req , res) => {
    res.render('contactus')
 })
 
+
+router.get('/logout', (req , res) => {
+  req.session.destroy()
+  res.redirect('/')
+})
 module.exports = router;

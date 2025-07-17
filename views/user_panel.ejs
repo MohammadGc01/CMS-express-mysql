@@ -70,69 +70,21 @@
     <div class="col-md-3 col-lg-2 sidebar">
       <div class="profile-box">
         <img src="/images/user.jpg" alt="پروفایل">
-        <h6>محمد حسن آتش‌بر</h6>
-        <p style="font-size: 13px;">mohammad@example.com</p>
+        <h6><%= user.username %></h6>
+        <p style="font-size: 13px;"><%= user.email %></p>
       </div>
 
       <a href="#" class="active"><i class="bi bi-speedometer2"></i> داشبورد</a>
-      <a href="#"><i class="bi bi-person"></i> اطلاعات کاربر</a>
       <a href="#"><i class="bi bi-gear"></i> تنظیمات حساب</a>
       <a href="#"><i class="bi bi-chat-dots"></i> پیام‌ها</a>
       <a href="#"><i class="bi bi-heart"></i> پست‌های لایک شده</a>
       <a href="#"><i class="bi bi-chat-left-text"></i> کامنت‌ها</a>
-      <a href="#" class="logout-btn text-danger"><i class="bi bi-box-arrow-right"></i> خروج</a>
+      <a href="http://localhost:3000/user/logout" class="logout-btn text-danger"><i class="bi bi-box-arrow-right"></i> خروج</a>
     </div>
 
     <!-- Main Content -->
     <div class="col-md-9 col-lg-10 p-4">
-      <h2>سلام، خوش آمدید 👋</h2>
-      <p class="text-muted">به پنل کاربری خود خوش آمدید. از منو می‌تونید به قسمت‌های مختلف برید.</p>
-
-      <!-- Dashboard Stats -->
-      <div class="row g-3 mt-3">
-        <div class="col-md-4">
-          <div class="card card-dark p-3">
-            <h5><i class="bi bi-chat-left-text"></i> کامنت‌ها</h5>
-            <p class="fs-4">34</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card card-dark p-3">
-            <h5><i class="bi bi-heart-fill text-danger"></i> پست‌های لایک شده</h5>
-            <p class="fs-4">12</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card card-dark p-3">
-            <h5><i class="bi bi-envelope"></i> پیام‌ها</h5>
-            <p class="fs-4">8</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- User Info -->
-      <div class="section-title mt-5"><h4><i class="bi bi-person-circle"></i> اطلاعات حساب</h4></div>
-      <div class="row g-3">
-        <div class="col-md-6">
-          <div class="card card-dark p-3">
-            <strong>نام کاربری:</strong>
-            <p class="mb-0">mhasan_dev</p>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="card card-dark p-3">
-            <strong>ایمیل:</strong>
-            <p class="mb-0">mohammad@example.com</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Settings -->
-      <div class="section-title mt-5"><h4><i class="bi bi-gear-fill"></i> تنظیمات حساب</h4></div>
-      <div class="card card-dark p-3">
-        <p>در این بخش می‌تونید رمز عبور، زبان سایت، نوتیفیکیشن‌ها و سایر موارد رو مدیریت کنید.</p>
-        <a href="#" class="btn btn-outline-light btn-sm">ویرایش تنظیمات</a>
-      </div>
+   
 
     </div>
 

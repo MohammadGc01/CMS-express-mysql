@@ -153,7 +153,7 @@
           });
           const data = await res.json();
           console.log(data);
-          alert('ثبت‌نام با موفقیت انجام شد!');
+          alert(data.message);
         } catch (err) {
           console.error(err);
           alert('خطا در ثبت‌نام');
@@ -176,7 +176,7 @@
           });
           const data = await res.json();
           console.log(data);
-          alert('ورود موفقیت‌آمیز بود!');
+          alert(data.message);
         } catch (err) {
           console.error(err);
           alert('خطا در ورود');

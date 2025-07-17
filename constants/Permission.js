@@ -1,4 +1,4 @@
-const Permissions = {
+const Permission = {
     ADMINISTRATOR: "ADMINISTRATOR",
 
     CREATE_PRODUCTS: "CREATE_PRODUCTS",
@@ -12,4 +12,4 @@ const Permissions = {
     VIEW_LOGS: "VIEW_LOGS",
 };
 
-module.exports = Permissions;
+module.exports = Permission;

@@ -290,7 +290,8 @@ async function removeRole(req , res) {
 }
 
 async function updateProfile(req , res) {
-res.json('salam')
+console.log(req.files);
+
 }
 
 module.exports = {

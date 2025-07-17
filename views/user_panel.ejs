@@ -99,7 +99,9 @@
   </div>
 </div>
 <script>
-  document.getElementById('Update_Profile_form').addEventListener('submit', async (event) => {
+ 
+  function bindForm(){
+      document.getElementById('Update_Profile_form').addEventListener('submit', async (event) => {
     const img = document.getElementById('Profile_img').value
 
     const result = await fetch('http://localhost:3000/user/update/profile', {
@@ -112,15 +114,19 @@
     
 
   })
+  }
 
 
   function changeSection(sectionid) {
       const template = document.getElementById(sectionid);
-      const btn = document.getElementById('SettingTemplateBtn')
+        const btn = document.getElementById(`${sectionid}Btn`);
+
       const menuitem = document.querySelectorAll('.sidebar a')
       menuitem.forEach(item => item.classList.remove('active'))
       btn.classList.add('active')
       document.getElementById('MainContent').innerHTML = template.innerHTML;
+
+      bindForm()
   }
 </script>
 </body>

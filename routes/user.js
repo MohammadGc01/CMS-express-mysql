@@ -10,6 +10,9 @@ const { authentication , authorization } = require("../middleware/auth");
 
 const router = require("express").Router();
 
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' })
+
 router.get('/auth',  (req ,res) => {
  if(req.session.user){
   res.redirect('/user/panel')
@@ -30,8 +33,9 @@ router.post("/register", (req, res) => {
   RegisterUser(req, res);
 });
 
-router.post('/update/profile' , authentication, (req , res) => {
-updateProfile(req , res)
+router.post('/update/profile' , authentication, upload.single('file') , (req , res) => {
+console.log(req.file);
+
 })
 
 router.post("/role/create", authentication, async (req, res) => {

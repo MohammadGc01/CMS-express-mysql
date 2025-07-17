@@ -75,7 +75,7 @@
       </div>
 
       <a href="#" class="active"><i class="bi bi-speedometer2"></i> داشبورد</a>
-      <a href="#"><i class="bi bi-gear"></i> تنظیمات حساب</a>
+      <a href="#" id="SettingTemplateBtn" onclick="changeSection('SettingTemplate')" ><i class="bi bi-gear"></i> تنظیمات حساب</a>
       <a href="#"><i class="bi bi-chat-dots"></i> پیام‌ها</a>
       <a href="#"><i class="bi bi-heart"></i> پست‌های لایک شده</a>
       <a href="#"><i class="bi bi-chat-left-text"></i> کامنت‌ها</a>
@@ -100,15 +100,27 @@
 </div>
 <script>
   document.getElementById('Update_Profile_form').addEventListener('submit', async (event) => {
-    event.preventDefault()
     const img = document.getElementById('Profile_img').value
+
+    const result = await fetch('http://localhost:3000/user/update/profile', {
+      method : "POST",
+      body : img
+    })
+
+    const data = await result.json()
+    console.log(data);
+    
+
   })
 
 
   function changeSection(sectionid) {
-      const template = document.getElementById('SettingTemplate');
-      document.getElementById('form-container').innerHTML = template.innerHTML;
-    
+      const template = document.getElementById(sectionid);
+      const btn = document.getElementById('SettingTemplateBtn')
+      const menuitem = document.querySelectorAll('.sidebar a')
+      menuitem.forEach(item => item.classList.remove('active'))
+      btn.classList.add('active')
+      document.getElementById('MainContent').innerHTML = template.innerHTML;
   }
 </script>
 </body>

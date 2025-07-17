@@ -4,6 +4,7 @@ const {
   LoginUser,
   createRole,
   deleteRole,
+  updateProfile,
 } = require("../controller/user_controller");
 const { authentication , authorization } = require("../middleware/auth");
 
@@ -28,6 +29,10 @@ router.post("/login", (req, res) => {
 router.post("/register", (req, res) => {
   RegisterUser(req, res);
 });
+
+router.post('/update/profile' , authentication, (req , res) => {
+updateProfile(req , res)
+})
 
 router.post("/role/create", authentication, async (req, res) => {
   const user = await authorization(req);

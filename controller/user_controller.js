@@ -288,6 +288,11 @@ async function removeRole(req , res) {
  })
 
 }
+
+async function updateProfile(req , res) {
+res.json('salam')
+}
+
 module.exports = {
   RegisterUser,
   LoginUser,
@@ -295,5 +300,6 @@ module.exports = {
   createRole,
   deleteRole,
   addRole,
-  removeRole
+  removeRole,
+  updateProfile
 };

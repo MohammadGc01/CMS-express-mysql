@@ -1,7 +1,10 @@
-const Permission = require('../constants/Permission');
-const db = require('../database/connection');
+const Permission = require("../constants/Permission");
 
 async function checkPermission(roleArray, PermissionsRequire) {
+  if (!Array.isArray(roleArray)) {
+    return false; // یا throw new Error("Invalid role array");
+  }
+
   const roleIds = roleArray.map(role => role.id);
   const placeholders = roleIds.map(() => '?').join(',');
 
@@ -17,13 +20,14 @@ async function checkPermission(roleArray, PermissionsRequire) {
   });
 
   const permissions = rows.map(r => r.permission_name);
-if (permissions.includes(Permission.ADMINISTRATOR)) {
-  return true;
-}
+  
+  if (permissions.includes(Permission.ADMINISTRATOR)) {
+    return true;
+  }
 
   return permissions.includes(PermissionsRequire);
 }
 
 module.exports = {
-  checkPermission,
-};
+  checkPermission
+}

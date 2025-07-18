@@ -23,6 +23,9 @@ router.get('/auth',  (req ,res) => {
 })
 
 router.get('/panel', authentication, async (req , res) => {
+   const user = await authorization(req);
+  const canAccess = await checkPermission(user.role,Permissions.CREATE_ROLE);
+  if (canAccess) res.render('admin_panel', {user : req.session.user})
   res.render('user_panel', {user : req.session.user})
 })
 
@@ -34,10 +37,6 @@ router.post("/register", (req, res) => {
   RegisterUser(req, res);
 });
 
-router.post('/update/profile' , authentication, upload.single('file') , (req , res) => {
-console.log(req.file);
-
-})
 
 router.post("/role/create", authentication, async (req, res) => {
   const user = await authorization(req);

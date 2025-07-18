@@ -156,9 +156,9 @@ async function LoginUser(req, res) {
 }
 
 async function createRole(req, res) {
-  const { name, color } = req.body;
-  const sql = "INSERT INTO roles(name,color) VALUES (?,?)";
-  db.query(sql, [name, color], async (err, result) => {
+  const { name} = req.body;
+  const sql = "INSERT INTO roles(name) VALUES (?)";
+  db.query(sql, [name], async (err, result) => {
     if (err) {
       const log = new logger(
         "error",
@@ -290,9 +290,22 @@ async function removeRole(req , res) {
 
 }
 
-async function updateProfile(req , res) {
-console.log(req.files);
+async function getPrmission(roles) {
+  const roleIds = roles.map(role => role.id);
+  const placeholders = roleIds.map(() => '?').join(',');
 
+  const rows = await new Promise((resolve, reject) => {
+    db.query(`
+        SELECT DISTINCT permission_name
+        FROM role_permission
+        WHERE role_id IN (${placeholders})
+      `, roleIds, (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+  });
+
+  return rows
 }
 
 module.exports = {
@@ -303,5 +316,5 @@ module.exports = {
   deleteRole,
   addRole,
   removeRole,
-  updateProfile
+  getPrmission,
 };

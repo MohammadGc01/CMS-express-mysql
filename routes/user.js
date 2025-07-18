@@ -4,16 +4,53 @@ const {
   LoginUser,
   createRole,
   deleteRole,
-  updateProfile,
   getPrmission,
 } = require("../controller/user_controller");
 const { authentication , authorization } = require("../middleware/auth");
 const { checkPermission } = require("../middleware/checkPermission");
-
 const router = require("express").Router();
 
+
+
+// upload profile
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' })
+const path = require('path');
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/images/');
+  },
+  filename: function (req, file, cb) {
+    // ایمیل کاربر از سشن
+    const rawEmail = req.session.user.email;
+
+    // پاک‌سازی ایمیل برای استفاده در نام فایل
+
+    // گرفتن پسوند فایل اصلی
+    const ext = path.extname(file.originalname);
+
+    // تنظیم نام فایل نهایی
+    const finalName = `${rawEmail}${ext}`;
+
+    cb(null, finalName);
+  }
+});
+const upload = multer({ storage });
+router.post('/upload/images', authentication,  upload.single('myfile'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'هیچ فایلی آپلود نشد' });
+  }
+
+  res.json({
+    message: 'آپلود با موفقیت انجام شد',
+    filename: req.file.filename,
+    url: `/uploads/${req.file.filename}`
+  });
+});
+// upload profile
+
+
+
+
 
 router.get('/auth',  (req ,res) => {
  if(req.session.user){

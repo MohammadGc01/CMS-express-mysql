@@ -25,7 +25,7 @@ app.use(session({
   }
 }));
 
-
+app.use('/uploads', express.static('public/uploads')); 
 app.use('/', index_api)
 app.use('/user', user_api)
 app.use('/post', post_api)

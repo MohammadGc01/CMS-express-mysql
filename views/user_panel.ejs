@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
   <meta charset="UTF-8">
   <title>پنل کاربری</title>
@@ -12,11 +13,13 @@
       font-family: 'vazir';
       src: url('/css/Vazir-Bold.ttf');
     }
+
     body {
       font-family: 'vazir';
       background-color: #121212;
       color: #fff;
     }
+
     .sidebar {
       height: 100vh;
       background-color: #1f1f1f;
@@ -24,6 +27,7 @@
       position: sticky;
       top: 0;
     }
+
     .sidebar a {
       display: block;
       padding: 10px 15px;
@@ -32,30 +36,37 @@
       border-radius: 6px;
       text-decoration: none;
     }
-    .sidebar a:hover, .sidebar a.active {
+
+    .sidebar a:hover,
+    .sidebar a.active {
       background-color: #0d6efd;
       color: white;
     }
+
     .profile-box {
       text-align: center;
       margin-bottom: 30px;
     }
+
     .profile-box img {
       width: 70px;
       height: 70px;
       border-radius: 50%;
       margin-bottom: 10px;
     }
+
     .card-dark {
       background-color: #2a2a2a;
       border: none;
       border-radius: 10px;
     }
+
     .section-title {
       margin: 30px 0 15px;
       border-bottom: 1px solid #444;
       padding-bottom: 5px;
     }
+
     .logout-btn {
       margin-top: 30px;
     }
@@ -63,63 +74,74 @@
 </head>
 
 <body>
-<div class="container-fluid">
-  <div class="row">
+  <div class="container-fluid">
+    <div class="row">
 
-    <!-- Sidebar -->
-    <div class="col-md-3 col-lg-2 sidebar">
-      <div class="profile-box">
-        <img src="/images/user.jpg" alt="پروفایل" id="user_prof">
-        <h6><%= user.username %></h6>
-        <p style="font-size: 13px;"><%= user.email %></p>
+      <!-- Sidebar -->
+      <div class="col-md-3 col-lg-2 sidebar">
+        <div class="profile-box">
+          <img src="http://localhost:3000/images/<%= user.email %>" alt="پروفایل" id="user_prof">
+          <h6>
+            <%= user.username %>
+          </h6>
+          <p style="font-size: 13px;">
+            <%= user.email %>
+          </p>
+        </div>
+
+        <a href="#" class="active"><i class="bi bi-speedometer2"></i> داشبورد</a>
+        <a href="#" id="SettingTemplateBtn" onclick="changeSection('SettingTemplate')"><i class="bi bi-gear"></i>
+          تنظیمات حساب</a>
+        <a href="#"><i class="bi bi-chat-dots"></i> پیام‌ها</a>
+        <a href="#"><i class="bi bi-heart"></i> پست‌های لایک شده</a>
+        <a href="#"><i class="bi bi-chat-left-text"></i> کامنت‌ها</a>
+        <a href="http://localhost:3000/user/logout" class="logout-btn text-danger"><i class="bi bi-box-arrow-right"></i>
+          خروج</a>
       </div>
 
-      <a href="#" class="active"><i class="bi bi-speedometer2"></i> داشبورد</a>
-      <a href="#" id="SettingTemplateBtn" onclick="changeSection('SettingTemplate')" ><i class="bi bi-gear"></i> تنظیمات حساب</a>
-      <a href="#"><i class="bi bi-chat-dots"></i> پیام‌ها</a>
-      <a href="#"><i class="bi bi-heart"></i> پست‌های لایک شده</a>
-      <a href="#"><i class="bi bi-chat-left-text"></i> کامنت‌ها</a>
-      <a href="http://localhost:3000/user/logout" class="logout-btn text-danger"><i class="bi bi-box-arrow-right"></i> خروج</a>
-    </div>
+      <!-- Main Content -->
+      <div class="col-md-9 col-lg-10 p-4" id="MainContent">
 
-    <!-- Main Content -->
-    <div class="col-md-9 col-lg-10 p-4" id="MainContent">
-    
-      <template id="SettingTemplate">
-        <div class="container">
-       <form id="Update_Profile_form">
-        <input type="file" id="Profile_img">
-        <input type="submit" value="ذخیره">
-       </form>
-        </div>
-      </template>
+        <template id="SettingTemplate">
+          <div class="container">
+            <form  id="Update_Profile_form">
+             <input type="file" name="myfile" id="Profile_img" required>
+
+              <button type="submit">آپلود</button>
+            </form>
+
+          </div>
+        </template>
+
+      </div>
 
     </div>
-
   </div>
-</div>
-<script>
- 
-  function bindForm(){
+  <script>
+
+    function bindForm() {
       document.getElementById('Update_Profile_form').addEventListener('submit', async (event) => {
-    const img = document.getElementById('Profile_img').value
+        const img = document.getElementById('Profile_img')
+        const formData = new FormData();
+        formData.append('myfile', img.files[0]);
 
-    const result = await fetch('http://localhost:3000/user/update/profile', {
-      method : "POST",
-      body : img
-    })
+        event.preventDefault()
+        const result = await fetch('http://localhost:3000/user/upload/images', {
+          method: "POST",
+          body: formData
+        })
 
-    const data = await result.json()
-    console.log(data);
-    
-
-  })
-  }
+        const data = await result.json()
+        console.log(data);
 
 
-  function changeSection(sectionid) {
+      })
+    }
+
+
+    function changeSection(sectionid) {
       const template = document.getElementById(sectionid);
-        const btn = document.getElementById(`${sectionid}Btn`);
+      const btn = document.getElementById(`${sectionid}Btn`);
 
       const menuitem = document.querySelectorAll('.sidebar a')
       menuitem.forEach(item => item.classList.remove('active'))
@@ -127,7 +149,8 @@
       document.getElementById('MainContent').innerHTML = template.innerHTML;
 
       bindForm()
-  }
-</script>
+    }
+  </script>
 </body>
+
 </html>

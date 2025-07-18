@@ -317,6 +317,7 @@ async function getPrmission(roles) {
   return rows
 }
 
+
 module.exports = {
   RegisterUser,
   LoginUser,

@@ -1,15 +1,16 @@
 const router = require("express").Router();
 const path = require('path')
 const fs = require('fs');
-
+const { authentication, authorization } = require("../middleware/auth");
+const Permissions = require('../constants/Permission');
+const { get_logs, get_logs_search } = require("../controller/log_controller");
+const { checkPermission } = require("../middleware/checkPermission");
 
 router.get('/', (req , res) => {
     res.render('home')
 })
 
-router.get('/contactus', (req , res) => {
-   res.render('contactus')
-})
+
 
 router.get('/images/:name', (req , res) => {
    const image_path = path.resolve(__dirname , '../public/images')
@@ -19,5 +20,20 @@ router.get('/images/:name', (req , res) => {
     res.sendFile(full_path)
 })
 
+
+router.get('/log/get', authentication, async (req , res) => {
+  const user = await authorization(req);
+  const canAccess = await checkPermission(user.roles,Permissions.VIEW_LOGS);
+  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+  get_logs(req , res)
+})
+
+router.get('/log/get/:search/:feild/:level', async (req , res) => {
+//   const user = await authorization(req);
+//   const canAccess = await checkPermission(user.roles,Permissions.VIEW_LOGS);
+//   if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+  get_logs_search(req , res)
+  
+})
 
 module.exports = router

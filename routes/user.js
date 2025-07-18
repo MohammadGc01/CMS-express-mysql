@@ -15,6 +15,7 @@ const router = require("express").Router();
 // upload profile
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public/images/');
@@ -30,6 +31,10 @@ const storage = multer.diskStorage({
 
     // تنظیم نام فایل نهایی
     const finalName = `${rawEmail}${ext}`;
+    const filePath = path.join('public/images/', finalName);
+    if(fs.existsSync(filePath)){
+      fs.unlinkSync(filePath)
+    }
 
     cb(null, finalName);
   }
@@ -64,8 +69,10 @@ router.get('/panel', authentication, async (req , res) => {
    const user = await authorization(req);
   const canAccess = await checkPermission(user.roles,Permissions.PANEL_ACCESS);
   const getperms = await getPrmission(user.roles)
+  const permname = getperms.map(r => r.permission_name)
+  
   if (canAccess) {
-   return res.render('admin_panel', {user : req.session.user , permissions : getperms})
+   return res.render('admin_panel', {user : req.session.user , permissions : permname})
   }
   res.render('user_panel', {user : req.session.user})
 })
@@ -108,9 +115,6 @@ router.post('/role/remove/:user_id', authentication , async (req , res) => {
   removeRole(req,res)
 })
 
-router.get('/contactus', (req , res) => {
-   res.render('contactus')
-})
 
 
 router.get('/logout', (req , res) => {

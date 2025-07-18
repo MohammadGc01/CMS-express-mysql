@@ -152,10 +152,8 @@
             body: JSON.stringify({ username, email, password })
           });
           const data = await res.json();
-          console.log(data);
           alert(data.message);
         } catch (err) {
-          console.error(err);
           alert('خطا در ثبت‌نام');
         }
       }
@@ -175,7 +173,6 @@
             body: JSON.stringify({ email, password })
           });
           const data = await res.json();
-          console.log(data);
           alert(data.message);
         } catch (err) {
           console.error(err);

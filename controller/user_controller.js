@@ -8,9 +8,11 @@ async function RegisterUser(req, res) {
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
-    const log = new logger(
+     const log = new logger(
+      "ثبت نام ناموفق",
+      `یوزری درخواست ثبت نام به سرور فرستاد اما هیچ بدنه ای نداشت` ,
       "warn",
-      `ثبت‌نام ناموفق به دلیل نبود اطلاعات کامل | IP: ${req.ip}`
+      req.ip
     );
     await log.save();
     return res.status(400).json({
@@ -28,12 +30,9 @@ async function RegisterUser(req, res) {
     [username, email, hashPassword, "user"],
     async (err, result) => {
       if (err) {
-        const log = new logger(
-          "error",
-          `خطا در ثبت‌نام کاربر: ${username} | جزئیات خطا: ${err.message}`
-        );
+        const log = new logger(`ثبت نام ناموفق :  ${err.name} `, `موقع query زدن برای ثبت نام مشکلی به وجود اومد پیام خطا : ${err.message}`, 'error' , req.ip)
         await log.save();
-        return res.status(500).send("ثبت‌نام با مشکل مواجه شد");
+        return res.status(500).send("ثبت‌ نام با مشکل مواجه شد");
       }
 
       const role_id = await new Promise( (resolve , reject) => {
@@ -53,15 +52,8 @@ async function RegisterUser(req, res) {
       })
 
 
-      const log = new logger(
-        "info",
-        `ثبت‌نام موفق: نام کاربری ${username} | ایمیل ${email}
-        
-        ${role_insert_result}
-        
-        `
-      );
-      await log.save();
+    const log = new logger('ثبت نام' , `کاربری با ایمیل : ${email} و نام کاربری :  ${username} ثبت نام کرد`, 'success' , req.ip)
+    await log.save();
 
       const mail = new mailler(email , `ثبت نام` , `ثبت نام شما موفقیت انجام شد`)
       await mail.send()
@@ -78,9 +70,11 @@ async function LoginUser(req, res) {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    const log = new logger(
+  const log = new logger(
+      " ورود ناموفق",
+      `یوزری درخواست ورود به سرور فرستاد اما هیچ بدنه ای نداشت` ,
       "warn",
-      `ورود ناموفق به دلیل نبود اطلاعات کامل | IP: ${req.ip}`
+      req.ip
     );
     await log.save();
     return res.json("لطفاً نام کاربری، ایمیل و رمز عبور را وارد کنید");
@@ -89,21 +83,14 @@ async function LoginUser(req, res) {
   const sql = "SELECT * FROM users WHERE email = ?";
   db.query(sql, email, async (err, result) => {
     if (err) {
-      const log = new logger(
-        "error",
-        `خطا در ورود کاربر: ${email} | جزئیات خطا: ${err.message}`
-      );
+         const log = new logger(`ورود  ناموفق :  ${err.name} `, `موقع query زدن برای  ورود مشکلی به وجود اومد پیام خطا : ${err.message}`, 'error' , req.ip)
+
       await log.save();
       return res.status(500).send("ورود شما با مشکل مواجه شد");
     }
 
     if (result.length === 0) {
-      const log = new logger(
-        "info",
-        `
-         یک درخواست ورود با IP : ${req.ip} زده اما کاربری با این ایمیل ${email} نبود 
-        `
-      );
+      const log = new logger('ورود ناموفق' , `یوزری درخواست ورود ثبت کرد ولی حسابی با این ${email} ایمیل در دیتا بیس نبود`, 'info' , req.ip);
       await log.save();
       res.status(404).json({
         success: false,
@@ -115,12 +102,7 @@ async function LoginUser(req, res) {
     const user = result[0];
     const hashPassword = await bcrypt.compare(password, user.password);
     if (!hashPassword) {
-      const log = new logger(
-        "warn",
-        `
-            کاربری که با ایپی : ${req.ip} درخواست ورود به حساب داده بود پسوردش نادرست بود 
-          `
-      );
+      const log = new logger('ورود کاربر', `کاربر با ایمیل ${email} درخواست ورود انجام فرستاد اما پسوردش اشتباه بود`,'info',req.ip)
       await log.save();
       res.json({
         message: "پسورد نادرست است دوباره امتحان کنید",
@@ -132,13 +114,9 @@ async function LoginUser(req, res) {
 
     req.session.user = {id : user.id , username : user.username , email : user.email , roles : roles}
 
-    const log = new logger(
-      "info",
-      `
-      کاربر ${user.username} با ایمیلی ${user.email} با موفقیت وارد شد
-      `
-    );
-    await log.save();
+      const log = new logger('ورود موفق',`ورود موفق کاربر ${user.username}`,'success',req.ip)
+      await log.save();
+   
     const time = new Date().getTime()
     const persianDateTime = new Intl.DateTimeFormat('fa-IR', {
       dateStyle: 'full',
@@ -150,7 +128,6 @@ async function LoginUser(req, res) {
     res.json({
       success: true,
       message: "ورود با موفقیت انجام شد",
-      user : req.session.user
     });
   });
 }
@@ -228,13 +205,9 @@ async function get_user_role(user) {
     );
   });
 
-  console.log(roleid);
-  console.log(roleData);
-  
 
   return roleData;
 }
-
 
 async function addRole(req, res) {
   const { user_id, role_id } = req.body;
@@ -283,6 +256,7 @@ async function addRole(req, res) {
     });
   });
 }
+
 async function removeRole(req , res) {
   const id = req.params.user_id
  if(!id){
@@ -313,6 +287,8 @@ async function getPrmission(roles) {
         resolve(result);
       });
   });
+
+  
 
   return rows
 }

@@ -202,7 +202,7 @@ async function deleteRole(req, res) {
 }
 
 async function get_user_role(user) {
-  const [roleRow] = await new Promise((resolve, reject) => {
+  const roleRow = await new Promise((resolve, reject) => {
     db.query(
       "SELECT role_id FROM user_role WHERE user_id = ?",
       [user.id],
@@ -214,10 +214,12 @@ async function get_user_role(user) {
     );
   });
 
-  const [roleData] = await new Promise((resolve, reject) => {
+  const roleid = roleRow.map(role => role.role_id)
+  const placeholders = roleid.map(() => '?').join(',')
+  const roleData = await new Promise((resolve, reject) => {
     db.query(
-      "SELECT id ,name,color FROM roles WHERE id = ?",
-      [roleRow.role_id],
+         `SELECT DISTINCT id, name FROM roles WHERE id IN (${placeholders})`,
+      roleid,
       (err, result) => {
         if (err) return reject(err);
         if (!result.length) return resolve([]);
@@ -225,6 +227,10 @@ async function get_user_role(user) {
       }
     );
   });
+
+  console.log(roleid);
+  console.log(roleData);
+  
 
   return roleData;
 }
@@ -291,6 +297,9 @@ async function removeRole(req , res) {
 }
 
 async function getPrmission(roles) {
+    if (!Array.isArray(roles)) {
+    return false; 
+  }
   const roleIds = roles.map(role => role.id);
   const placeholders = roleIds.map(() => '?').join(',');
 

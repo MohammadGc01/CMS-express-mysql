@@ -1,8 +1,9 @@
 const Permission = require("../constants/Permission");
+const db = require("../database/connection");
 
 async function checkPermission(roleArray, PermissionsRequire) {
   if (!Array.isArray(roleArray)) {
-    return false; // یا throw new Error("Invalid role array");
+    return false; 
   }
 
   const roleIds = roleArray.map(role => role.id);

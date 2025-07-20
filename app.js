@@ -8,7 +8,6 @@ const post_api = require('./routes/post')
 const index_api = require('./routes/index')
 const contact_api = require('./routes/contact')
 const path = require('path')
-const fs = require('fs');
 app.set('views', __dirname + '/views')
 app.set('view engine', 'ejs')
 app.use(body_parser.urlencoded({ extended: true }))

@@ -8,6 +8,10 @@ const Permission = {
     REMOVE_ROLE: "REMOVE_ROLE",
 
     VIEW_LOGS: "VIEW_LOGS",
+
+    VIEW_CATEGORY: "VIEW_CATEGORY",
+    ADD_CATEGORY: "ADD_CATEGORY",
+    ADD_SUB_CATEGORY: "ADD_SUB_CATEGORY",
 };
 
 module.exports = Permission;

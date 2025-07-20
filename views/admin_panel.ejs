@@ -75,71 +75,158 @@
                 <ul>
                     <li> <i class="bi bi-speedometer"></i> داشبورد </li>
                     <li> <i class="bi bi-box"></i> پست ها </li>
-                    <li> <i class="bi bi-list"></i> دسته بندی ها </li>
-                    <li> <i class="bi bi-people"></i> کاربران </li>
-                    <% if(permissions.includes('VIEW_LOGS') || permissions.includes('ADMINISTRATOR')){ %>
-                        <li onclick="selectSec('log_template')"> <i class="bi bi-file-earmark-post"></i> لاگ ها </li>
+                    <% if(permissions.includes('VIEW_CATEGORY') || permissions.includes('ADMINISTRATOR')){ %>
+                        <li onclick="selectSec('category_template')"> <i class="bi bi-list"></i> دسته بندی ها </li>
                         <%}%>
+
+                            <li> <i class="bi bi-people"></i> کاربران </li>
+
+                            <% if(permissions.includes('VIEW_LOGS') || permissions.includes('ADMINISTRATOR')){ %>
+                                <li onclick="selectSec('log_template')"> <i class="bi bi-file-earmark-post"></i> لاگ ها
+                                </li>
+                                <%}%>
+
+                </ul>
+
+                <ul>
+                    <hr>
+                    <li> <i class="bi bi-brightness-high"></i> دارک مود </li>
+                    <a href="http://localhost:3000/user/logout">
+                        <li class="text-danger bg-dark rounded-3"> <i class="bi bi-box-arrow-right"></i> خروج </li>
+                    </a>
                 </ul>
             </div>
             <div class="col-md-9 col-lg-10" id="MainContent">
-                <template id="log_template">
-                    <div class="container py-5">
-                        <h2 class="text-dark mb-4">لاگ‌ها</h2>
 
-                        <!-- نوبار فیلتر و جستجو -->
-                        <nav class="navbar bg-light rounded shadow-sm px-3 mb-4">
-                            <div class="container-fluid flex-wrap justify-content-between">
-
-                                <!-- فیلتر و رفرش -->
-                                <div class="d-flex gap-4 align-items-center">
-                                    <select class="form-select" onclick="filter_log(this.value)">
-                                        <option value="all">همه</option>
-                                        <option value="success">موفق</option>
-                                        <option value="info">اطلاعات</option>
-                                        <option value="warn">هشدار</option>
-                                        <option value="error">خطا</option>
-                                    </select>
-                                    <button class="btn btn-outline-primary" id="log_refresh_btn" onclick=" get_logs()">
-                                        <i class="bi bi-arrow-clockwise"></i> رفرش
-                                    </button>
-                                    <button class="btn btn-outline-primary">
-                                        <a class="nav-link" href="http://localhost:3000/log/download/all">خروجی  JSON</a>
-                                    </button>
-                                </div>
-                            </div>
-                        </nav>
-
-
-                        
-                        <!-- ردیف نمایش لاگ‌ها -->
-                        <div class="row" id="log_results_row">
-
-                        </div>
-                    </div>
-                </template>
 
             </div>
+
+            <template id="log_template">
+                <div class="container py-5">
+                    <h2 class="text-dark mb-4">لاگ‌ها</h2>
+
+                    <!-- نوبار فیلتر و جستجو -->
+                    <nav class="navbar bg-light rounded shadow-sm px-3 mb-4">
+                        <div class="container-fluid flex-wrap justify-content-between">
+
+                            <div id="all_log_count" class="text-dark">تعداد کلی : </div>
+                            <!-- فیلتر و رفرش -->
+                            <div class="d-flex gap-4 align-items-center">
+                                <select class="form-select" onclick="filter_log(this.value)">
+                                    <option value="all">همه</option>
+                                    <option value="success">موفق</option>
+                                    <option value="info">اطلاعات</option>
+                                    <option value="warn">هشدار</option>
+                                    <option value="error">خطا</option>
+                                </select>
+                                <button class="btn btn-outline-primary" id="log_refresh_btn" onclick=" get_logs()">
+                                    <i class="bi bi-arrow-clockwise"></i> رفرش
+                                </button>
+                                <button class="btn btn-outline-primary">
+                                    <a class="nav-link" href="http://localhost:3000/log/download/all">خروجی JSON</a>
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+
+
+
+                    <!-- ردیف نمایش لاگ‌ها -->
+                    <div class="row" id="log_results_row">
+
+                    </div>
+                </div>
+            </template>
+
+            <template id="category_template">
+                <div class="container p-5 text-dark">
+                    <form id="add_cat" class="d-flex">
+                        <input type="text" name="" id="input_cat_name" class="form-control w-25 me-2">
+                        <button type="submit" class="btn btn-success">ذخیره</button>
+                    </form>
+                </div>
+                <div class="container p-5">
+                    <table class="table" id="table">
+                        <tr>
+                            <th class="col">ID</th>
+                            <th class="col">نام دسته بندی</th>
+                            <th class="col">تاریخ ساخت</th>
+                            <th><button onclick="get_category()" class="p-1"><i
+                                        class="bi bi-arrow-clockwise"></i></button></th>
+                        </tr>
+                    </table>
+                </div>
+            </template>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let logs = []
+        let categorys = []
+        let all_log_count = 0
+
+        function add_cat() {
+            document.getElementById('add_cat').addEventListener('submit', async (event) => {
+            event.preventDefault()
+            const name = document.getElementById('input_cat_name').value
+
+            const result = await fetch('http://localhost:3000/post/category/add', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body : JSON.stringify({name})
+
+            })
+            const data = await result.json()
+            alert(data)
+            get_category()
+        })
+        }
+
+
+
+        async function get_category() {
+            categorys = []
+            const result = await fetch('http://localhost:3000/post/get/categorys', {
+                method: "GET",
+            })
+            categorys = await result.json()
+
+            const table = document.getElementById('table')
+            table.innerHTML = `  <tr>
+                            <th class="col">ID</th>
+                            <th class="col">نام دسته بندی</th>
+                            <th class="col">تاریخ ساخت</th>
+                            <th><button onclick="get_category()" class="p-1"><i class="bi bi-arrow-clockwise"></i></button></th>
+                        </tr>`
+            categorys.forEach(category => {
+                const tr = document.createElement('tr')
+                tr.classList.add('text-dark')
+
+                tr.innerHTML = `
+
+                 <th scope="row">${category.id}</th>
+      <td>${category.name}</td>
+      <td>${category.create_time}</td>
+
+      `
+                table.appendChild(tr)
+            })
+        }
 
         function selectSec(sectionid) {
             const template = document.getElementById(sectionid);
             document.getElementById('MainContent').innerHTML = template.innerHTML;
-            // switch (sectionid) {
-            //     case "log_template":
-            //         search_log()
-            //         break;
 
-            // }
+            if(sectionid === "category_template"){
+                add_cat()
+            }
         }
-
         async function get_logs() {
             logs = []
+            all_log_count = document.getElementById('all_log_count')
             const result = await fetch('http://localhost:3000/log/get', {
                 method: "GET"
             })
@@ -149,7 +236,7 @@
             logs = await result.json()
             logs.forEach(log => {
                 const div = document.createElement('div')
-                div.classList.add('col-4', 'p-2', 'm-1', 'rounded-3', 'log_card', `${log.level}_back`);
+                div.classList.add('col-3', 'p-2', 'm-1', 'rounded-3', 'log_card', `${log.level}_back`);
 
                 div.innerHTML = `
             <h6>موضوع : ${log.title} </h6>
@@ -160,8 +247,9 @@
         `
                 log_results_row.appendChild(div)
             });
-        }
 
+            all_log_count.innerHTML = `تعداد کلی لاگ ها : ${logs.length}`
+        }
         function filter_log(type) {
             const allLogs = document.querySelectorAll('.log_card');
             allLogs.forEach(log => {
@@ -177,14 +265,14 @@
             });
         }
 
-            async function delete_log(id) {
-                const result = await fetch(`http://localhost:3000/log/delete/${id}`, {
-                    method: "POST"
-                })
+        async function delete_log(id) {
+            const result = await fetch(`http://localhost:3000/log/delete/${id}`, {
+                method: "POST"
+            })
 
-                const data = await result.json()
-                alert(data)
-            }
+            const data = await result.json()
+            alert(data)
+        }
 
     </script>
 </body>

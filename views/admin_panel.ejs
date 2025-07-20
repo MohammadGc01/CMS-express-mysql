@@ -156,6 +156,30 @@
                         </tr>
                     </table>
                 </div>
+
+
+
+                 <div class="container p-5 text-dark">
+                    <form id="add_sub_cat" class="d-flex">
+                        <input type="text" name="" id="input_sub_cat_name" class="form-control w-25 me-2">
+                        <select id="select_sub_category" class="me-2">
+
+                        </select>
+                        <button type="submit" class="btn btn-success">ذخیره</button>
+                    </form>
+                </div>
+                <div class="container p-5">
+                    <table class="table" id="table2">
+                        <tr>
+                            <th class="col">ID</th>
+                            <th class="col">نام زیر دسته بندی</th>
+                            <th class="col">تاریخ ساخت</th>
+                            <th class="col"> ایدی دسته بندی اصلی</th>
+                            <th><button onclick="get_sub_category()" class="p-1"><i
+                                        class="bi bi-arrow-clockwise"></i></button></th>
+                        </tr>
+                    </table>
+                </div>
             </template>
         </div>
     </div>
@@ -164,6 +188,7 @@
     <script>
         let logs = []
         let categorys = []
+        let sub_category = []
         let all_log_count = 0
 
         function add_cat() {
@@ -195,6 +220,7 @@
             categorys = await result.json()
 
             const table = document.getElementById('table')
+            const select_sub_category = document.getElementById('select_sub_category')
             table.innerHTML = `  <tr>
                             <th class="col">ID</th>
                             <th class="col">نام دسته بندی</th>
@@ -213,9 +239,50 @@
 
       `
                 table.appendChild(tr)
+
+
+                const option = document.createElement('option')
+                option.value = category.id
+                option.innerText = category.name
+                
+                select_sub_category.appendChild(option)
+
             })
         }
 
+
+        async function get_sub_category() {
+            sub_category = []
+            const result = await fetch('http://localhost:3000/post/get/sub/categorys', {
+                method: "GET",
+            })
+            sub_category = await result.json()
+
+            const table = document.getElementById('table2')
+            table.innerHTML = `  <tr>
+                            <th class="col">ID</th>
+                            <th class="col">نام زیر دسته بندی</th>
+                            <th class="col">تاریخ ساخت</th>
+                            <th class="col"> ایدی دسته بندی اصلی</th>
+                            <th><button onclick="get_sub_category()" class="p-1"><i
+                                        class="bi bi-arrow-clockwise"></i></button></th>
+                        </tr>`
+            sub_category.forEach(category => {
+                const tr = document.createElement('tr')
+                tr.classList.add('text-dark')
+
+                tr.innerHTML = `
+
+                 <th scope="row">${category.id}</th>
+      <td>${category.name}</td>
+      <td>${category.create_time}</td>
+      <td>${category.category_id}</td>
+
+
+      `
+                table.appendChild(tr)
+            })
+        }
         function selectSec(sectionid) {
             const template = document.getElementById(sectionid);
             document.getElementById('MainContent').innerHTML = template.innerHTML;

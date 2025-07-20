@@ -3,7 +3,7 @@ const path = require('path')
 const fs = require('fs');
 const { authentication, authorization } = require("../middleware/auth");
 const Permissions = require('../constants/Permission');
-const { get_logs, get_logs_search } = require("../controller/log_controller");
+const { get_logs, get_logs_search, delete_log, download_log } = require("../controller/log_controller");
 const { checkPermission } = require("../middleware/checkPermission");
 
 router.get('/', (req , res) => {
@@ -28,12 +28,21 @@ router.get('/log/get', authentication, async (req , res) => {
   get_logs(req , res)
 })
 
-router.get('/log/get/:search/:feild/:level', async (req , res) => {
-//   const user = await authorization(req);
-//   const canAccess = await checkPermission(user.roles,Permissions.VIEW_LOGS);
-//   if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
-  get_logs_search(req , res)
+router.post('/log/delete/:id', async (req , res) => {
+   const user = await authorization(req);
+  const canAccess = await checkPermission(user.roles,Permissions.VIEW_LOGS);
+  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+  delete_log(req , res)
+})
+
+router.get('/log/download/all', authentication ,async (req , res) => {
+ const user = await authorization(req);
+  const canAccess = await checkPermission(user.roles,Permissions.VIEW_LOGS);
+  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
   
+  download_log(req , res)
+   console.log("Session:", req.session);
+  console.log("User:", req.session.user); // یا هر چیزی که ذخیره کردی
 })
 
 module.exports = router

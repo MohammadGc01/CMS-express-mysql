@@ -1,4 +1,6 @@
 const db = require("../database/connection");
+const path = require('path')
+const fs = require('fs');
 
 function save_to_database(title,message, level , ip) {
  const time = new Date().getTime()
@@ -25,18 +27,30 @@ function get_logs(req , res) {
     })
 }
 
-function get_logs_search(req , res) {
-    const {search , level , feild} = req.params
-    const sql = `SELECT * FROM logs WHERE level = ? AND ${feild} LIKE ? `
-    db.query(sql, [level , `%${search}%`], (err, result) => {
-        if (err) {
-            console.log("get log from db have error => " + err.message)
-            return
-        }
-        console.log(result);
-        
-        res.json(result)
-    })
+function delete_log(req , res) {
+    const id = req.params.id
+    if(!id) return res.json({message : "ایدی را وارد نکردید"})
+        db.query("DELETE FROM logs WHERE id = ?", id , (err , result) => {
+    
+            if(err) return res.json(err)
+                res.json('لاگ مورد نظر پاک شد')
+
+        })
+}
+
+
+function download_log(req, res) {
+     db.query("SELECT * FROM logs", (err, result) => {
+    if (err) {
+      console.error("DB Error:", err.message);
+      return res.status(500).send("خطا در دریافت اطلاعات");
+    }
+
+    const json = JSON.stringify(result, null, 2);
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', 'attachment; filename="logs.json"');
+    res.send(json);
+  });
 }
 
 
@@ -45,5 +59,6 @@ function get_logs_search(req , res) {
 module.exports = {
 save_to_database,
 get_logs,
-get_logs_search
+delete_log,
+download_log
 }

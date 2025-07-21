@@ -18,18 +18,19 @@ async function send_email(to, subject, text) {
     text: `${text}`,
   };
 
-  transporter.sendMail(mailOption , async (err , info) => {
-    if(err){
-      const log = new logger('error', `موقغ ارسال ایمیل با این جزییات  : ${to} , ${subject} , ${text} مشکلی پیش اومد  : ${err.message}`)
+  transporter.sendMail(mailOption, async (err, info) => {
+    if (err) {
+
+      const log = new logger(`ارسال نشدن ایمیل : ${err.name}`, 
+        `موقع ارسال ایمیل به : ${to} با موضوع \n : ${subject} \n و متن : ${text} مشکلی به وجود امد \n متن خطا  : ${err.message}`, 
+        'error', 'NONE')
       await log.save()
-      console.log(err.message);      
+      console.log(err.message);
       return;
     }
-    
-    const log = new logger(
-      'info',
-      `ایمیل با موفقیت ارسال شد به: ${to} موضوع: ${subject}`
-    );
+
+    const log = new logger('ارسال موقع ایمیل', 
+      `ایمیل جدیدی به  : ${mailOption.to} \n موضوع : ${mailOption.subject} \n با متن  : ${mailOption.text}`, 'info', 'NONE')
     await log.save();
 
   })

@@ -37,10 +37,29 @@ async function add_sub_category(req , res){
     })
 }
 
+async function delete_category(req, res) {
+ const { id } = req.params;
+ const sql = "DELETE FROM category WHERE id = ?";
+ db.query(sql, id, (err, result) => {
+    if (err) return res.json(err);
+    res.json('دسته بندی حذف شد')
+    })
+}
+
+async function delete_sub_category(req ,res) {
+    const {id} = req.body
+    const sql = "DELETE FROM sub_category WHERE id = ?";
+    db.query(sql, id, (err, result) => {
+    if (err) return res.json(err);
+    res.json('دسته بندی حذف شد')
+    })
+}
 
 module.exports = {
     get_categorys,
     add_category,
     get_sub_categorys,
     add_sub_category,
+    delete_category,
+    delete_sub_category
 }

@@ -29,7 +29,7 @@ async function send_email(to, subject, text) {
       return;
     }
 
-    const log = new logger('ارسال موقع ایمیل', 
+    const log = new logger('ارسال موفق ایمیل', 
       `ایمیل جدیدی به  : ${mailOption.to} \n موضوع : ${mailOption.subject} \n با متن  : ${mailOption.text}`, 'info', 'NONE')
     await log.save();
 

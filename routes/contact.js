@@ -8,7 +8,7 @@ router.get('/', (req , res) => {
 })
 
 router.post('/create', async (req , res) => {
-   await  create_contact(req , res)
+   await create_contact(req , res)
 })
 
 module.exports = router

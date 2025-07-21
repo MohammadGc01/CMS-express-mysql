@@ -3,7 +3,7 @@ const path = require('path')
 const fs = require('fs');
 const { authentication, authorization } = require("../middleware/auth");
 const Permissions = require('../constants/Permission');
-const { get_logs, get_logs_search, delete_log, download_log } = require("../controller/log_controller");
+const { get_logs, delete_log, download_log } = require("../controller/log_controller");
 const { checkPermission } = require("../middleware/checkPermission");
 
 router.get('/', (req , res) => {
@@ -41,8 +41,6 @@ router.get('/log/download/all', authentication ,async (req , res) => {
   if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
   
   download_log(req , res)
-   console.log("Session:", req.session);
-  console.log("User:", req.session.user); // یا هر چیزی که ذخیره کردی
 })
 
 module.exports = router

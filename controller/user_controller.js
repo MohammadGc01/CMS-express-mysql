@@ -264,7 +264,7 @@ async function removeRole(req , res) {
  }  
  
  db.query("DELETE FROM user_role WHERE user_id", [id], async (err , result) => {
-   if(err) return res.json({message : "موقع گرفتن رول یوزر مشکلی پیش اومد"})
+   if(err) return res.json({message : "موقع گرفتن رول کاربر مشکلی پیش اومد"})
     res.json({message : "رول کاربر گرفته شد"})  
  })
 

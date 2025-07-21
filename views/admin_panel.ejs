@@ -212,6 +212,29 @@
 
 
 
+         function add_sub_cat() {
+            document.getElementById('add_sub_cat').addEventListener('submit', async (event) => {
+            event.preventDefault()
+            const name = document.getElementById('input_sub_cat_name').value
+            const category_id = document.getElementById('select_sub_category').value
+
+            const result = await fetch('http://localhost:3000/post/sub/category/add', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body : JSON.stringify({name , category_id})
+
+            })
+            const data = await result.json()
+            alert(data)
+            get_category()
+        })
+        }
+
+
+
+
         async function get_category() {
             categorys = []
             const result = await fetch('http://localhost:3000/post/get/categorys', {
@@ -289,6 +312,7 @@
 
             if(sectionid === "category_template"){
                 add_cat()
+                add_sub_cat()
             }
         }
         async function get_logs() {

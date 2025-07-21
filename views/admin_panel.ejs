@@ -74,7 +74,10 @@
             <div class="col-md-3 col-lg-2 sidebar">
                 <ul>
                     <li> <i class="bi bi-speedometer"></i> داشبورد </li>
-                    <li> <i class="bi bi-box"></i> پست ها </li>
+                    <% if(permissions.includes('VIEW_POSTS') || permissions.includes('ADMINISTRATOR')){ %>
+                    <li onclick="selectSec('post_template')"><i class="bi bi-box"></i> پست ها </li>
+                        <%}%>
+
                     <% if(permissions.includes('VIEW_CATEGORY') || permissions.includes('ADMINISTRATOR')){ %>
                         <li onclick="selectSec('category_template')"> <i class="bi bi-list"></i> دسته بندی ها </li>
                         <%}%>
@@ -180,6 +183,10 @@
                         </tr>
                     </table>
                 </div>
+            </template>
+
+            <template id="post_template">
+             
             </template>
         </div>
     </div>

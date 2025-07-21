@@ -55,11 +55,27 @@ async function delete_sub_category(req ,res) {
     })
 }
 
+
+async function CREATE_POST(req , res) {
+    const {title , description , more_description , category_id , sub_category_id}  = req.body 
+    if(!title || !description || !more_description || !category_id || !sub_category_id) return res.json("شما هیچ  اطلاعاتی وارد نکردید")
+        const sql = "INSERT INTO post(title , description , more_description , category_id , sub_category_id"
+    db.query(sql, [title , description , more_description , category_id , sub_category_id], async (err , result) => {
+      if(err){
+
+        return res.json(`موقع ثبت query مشکلی به وجود امد پیام خطا : ${err.message}`)
+      }  
+
+      res.json('پست شما با موفقیت ایجاد شد')
+    })
+}
+
 module.exports = {
     get_categorys,
     add_category,
     get_sub_categorys,
     add_sub_category,
     delete_category,
-    delete_sub_category
+    delete_sub_category,
+    CREATE_POST,
 }

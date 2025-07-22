@@ -11,6 +11,62 @@ router.get('/', (req, res) => {
 })
 
 
+// upload profile
+const multer = require('multer');
+const db = require("../database/connection");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/images/');
+  },
+  filename: function (req, file, cb) {
+    // گرفتن نام اصلی فایل و پسوند آن
+    const originalName = file.originalname;
+    const ext = path.extname(originalName);
+    const baseName = path.basename(originalName, ext);
+
+    // فقط نام پایه را نگه می‌دارد
+    const finalName = baseName + ext; // یا می‌توانید فقط baseName یا هر شیوه دیگری
+
+    const filePath = path.join('public/images/', finalName);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    // حالا اگر می‌خواهید فقط نام بدون پسوند در بانک ذخیره کنید:
+    req.body.file_base_name = baseName;
+
+    cb(null, finalName);
+  }
+});
+
+const upload = multer({ storage });
+
+router.post('/upload/images', authentication, upload.single('myfile'), async (req, res) => {
+  const user = await authorization(req);
+  const canAccess = await checkPermission(user.roles, Permissions.CREATE_POST);
+  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+  
+  if (!req.file) {
+    return res.status(400).json({ error: 'هیچ فایلی آپلود نشد' });
+  }
+
+  // ثبت نام فقط اسم پایه فایل در پایگاه داده
+  const fileNameWithoutExt = req.body.file_base_name; // این رو در بخش filename قرار دادم
+  db.query("INSERT INTO images(name) VALUES(?)", [fileNameWithoutExt], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'خطا در ثبت تصویر در پایگاه داده' });
+    }
+
+    res.json({
+      message: 'آپلود با موفقیت انجام شد',
+      filename: req.file.filename,
+      url: `/uploads/${req.file.filename}`
+    });
+  });
+});
+
 
 router.get('/images/:name', (req, res) => {
   const image_path = path.resolve(__dirname, '../public/images')

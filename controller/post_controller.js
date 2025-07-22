@@ -57,10 +57,10 @@ async function delete_sub_category(req ,res) {
 
 
 async function CREATE_POST(req , res) {
-    const {title , description , more_description , category_id , sub_category_id}  = req.body 
-    if(!title || !description || !more_description || !category_id || !sub_category_id) return res.json("شما هیچ  اطلاعاتی وارد نکردید")
-        const sql = "INSERT INTO post(title , description , more_description , category_id , sub_category_id"
-    db.query(sql, [title , description , more_description , category_id , sub_category_id], async (err , result) => {
+    const {title , description , more_description , category_id , sub_category_id, img_path}  = req.body 
+    if(!title || !description || !more_description || !category_id || !sub_category_id || !img_path) return res.json("شما هیچ  اطلاعاتی وارد نکردید")
+        const sql = "INSERT INTO post(title , description , more_description , category_id , sub_category_id , img_path) VALUES(?,?,?,?,?,?)"
+    db.query(sql, [title , description , more_description , category_id , sub_category_id , img_path], async (err , result) => {
       if(err){
 
         return res.json(`موقع ثبت query مشکلی به وجود امد پیام خطا : ${err.message}`)

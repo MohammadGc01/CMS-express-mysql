@@ -78,6 +78,11 @@
                     <li onclick="selectSec('post_template')"><i class="bi bi-box"></i> پست ها </li>
                         <%}%>
 
+                         <% if(permissions.includes('VIEW_POSTS') || permissions.includes('ADMINISTRATOR')){ %>
+                    <li onclick="selectSec('Images_template')"><i class="bi bi-image"></i> عکس ها  </li>
+                        <%}%>
+
+
                     <% if(permissions.includes('VIEW_CATEGORY') || permissions.includes('ADMINISTRATOR')){ %>
                         <li onclick="selectSec('category_template')"> <i class="bi bi-list"></i> دسته بندی ها </li>
                         <%}%>
@@ -188,6 +193,18 @@
             <template id="post_template">
              
             </template>
+
+            <template id="Images_template">
+                <div class="container d-flex p-5 text-dark">
+                     <h5  class="me-5">عکس ها</h5>
+                     <form  id="Update_img_form">
+             <input type="file" name="myfile" id="file_img" required>
+
+              <button type="submit">آپلود</button>
+            </form>
+
+                </div>
+            </template>
         </div>
     </div>
 
@@ -197,6 +214,26 @@
         let categorys = []
         let sub_category = []
         let all_log_count = 0
+
+          function bindForm() {
+      document.getElementById('Update_img_form').addEventListener('submit', async (event) => {
+        const img = document.getElementById('file_img')
+        const formData = new FormData();
+        formData.append('myfile', img.files[0]);
+
+        event.preventDefault()
+        const result = await fetch('http://localhost:3000/upload/images', {
+          method: "POST",
+          body: formData
+        })
+
+        const data = await result.json()
+        console.log(data);
+
+
+      })
+    }
+
 
         function add_cat() {
             document.getElementById('add_cat').addEventListener('submit', async (event) => {
@@ -321,6 +358,10 @@
                 add_cat()
                 add_sub_cat()
             }
+
+            if(sectionid === "Images_template"){
+                bindForm()
+            }
         }
         async function get_logs() {
             logs = []
@@ -334,7 +375,7 @@
             logs = await result.json()
             logs.forEach(log => {
                 const div = document.createElement('div')
-                div.classList.add('col-3', 'p-2', 'm-1', 'rounded-3', 'log_card', `${log.level}_back`);
+                div.classList.add('col-4', 'p-2', 'm-1', 'rounded-3', 'log_card', `${log.level}_back`);
 
                 div.innerHTML = `
             <h6>موضوع : ${log.title} </h6>

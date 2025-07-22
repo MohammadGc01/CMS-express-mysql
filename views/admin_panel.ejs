@@ -91,12 +91,19 @@
 
                                             <li> <i class="bi bi-people"></i> کاربران </li>
 
-                                            <% if(permissions.includes('VIEW_LOGS') ||
+                                            <% if(permissions.includes('VIEW_ROLE') ||
                                                 permissions.includes('ADMINISTRATOR')){ %>
-                                                <li onclick="selectSec('log_template')"> <i
-                                                        class="bi bi-file-earmark-post"></i> لاگ ها
+                                                <li onclick="selectSec('roles_template')"> <i class="bi bi-people"></i>
+                                                    نقش ها
                                                 </li>
                                                 <%}%>
+
+                                                    <% if(permissions.includes('VIEW_LOGS') ||
+                                                        permissions.includes('ADMINISTRATOR')){ %>
+                                                        <li onclick="selectSec('log_template')"> <i
+                                                                class="bi bi-file-earmark-post"></i> لاگ ها
+                                                        </li>
+                                                        <%}%>
 
                 </ul>
 
@@ -227,7 +234,7 @@
                 formData.append('myfile', img.files[0]);
 
                 event.preventDefault()
-                const result = await fetch('http://localhost:3000/get/images', {
+                const result = await fetch('http://localhost:3000/upload/images', {
                     method: "POST",
                     body: formData
                 })
@@ -254,6 +261,8 @@
                      <img src="http://localhost:3000/images/${img.name}">
 
                       <h3 class="text-dark">${img.name}</h3>
+                      
+                <button onclick="delete_img('${img.name}')">حذف</button>
 
                      `
 
@@ -262,6 +271,17 @@
 
         }
 
+
+
+        async function delete_img(name) {
+            const result = await fetch(`http://localhost:3000/image/delete/${name}`, {
+                method: "DELETE"
+            })
+
+            const data = await result.json()
+            alert(data)
+            bindForm()
+        }
 
         function add_cat() {
             document.getElementById('add_cat').addEventListener('submit', async (event) => {

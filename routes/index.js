@@ -75,6 +75,23 @@ router.get('/get/images', authentication , async (req , res) => {
   })
 })
 
+router.delete('/image/delete/:name', authentication , async (req ,res) => {
+   const user = await authorization(req);
+  const canAccess = await checkPermission(user.roles, Permissions.CREATE_POST);
+
+  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+    const image_path = path.resolve(__dirname, '../public/images')
+  const images = fs.readdirSync(image_path)
+  const result = images.find(file => file.startsWith(req.params.name + "."))
+
+  fs.rmSync(image_path +'/'+ result)
+  db.query('DELETE FROM images WHERE name = ?', req.params.name , (err , resu) => {
+   if(err) return res.json(err)
+    res.json('عکس حذف شد ')
+  })
+
+})
+
 router.get('/images/:name', (req, res) => {
   const image_path = path.resolve(__dirname, '../public/images')
   const images = fs.readdirSync(image_path)

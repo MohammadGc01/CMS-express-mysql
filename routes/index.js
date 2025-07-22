@@ -68,6 +68,13 @@ router.post('/upload/images', authentication, upload.single('myfile'), async (re
 });
 
 
+router.get('/get/images', authentication , async (req , res) => {
+  db.query('SELECT name FROM images', (err , result) => {
+    if(err) return res.json(err)
+      res.json(result)
+  })
+})
+
 router.get('/images/:name', (req, res) => {
   const image_path = path.resolve(__dirname, '../public/images')
   const images = fs.readdirSync(image_path)

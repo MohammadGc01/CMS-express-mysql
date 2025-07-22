@@ -75,24 +75,28 @@
                 <ul>
                     <li> <i class="bi bi-speedometer"></i> داشبورد </li>
                     <% if(permissions.includes('VIEW_POSTS') || permissions.includes('ADMINISTRATOR')){ %>
-                    <li onclick="selectSec('post_template')"><i class="bi bi-box"></i> پست ها </li>
+                        <li onclick="selectSec('post_template')"><i class="bi bi-box"></i> پست ها </li>
                         <%}%>
 
-                         <% if(permissions.includes('VIEW_POSTS') || permissions.includes('ADMINISTRATOR')){ %>
-                    <li onclick="selectSec('Images_template')"><i class="bi bi-image"></i> عکس ها  </li>
-                        <%}%>
-
-
-                    <% if(permissions.includes('VIEW_CATEGORY') || permissions.includes('ADMINISTRATOR')){ %>
-                        <li onclick="selectSec('category_template')"> <i class="bi bi-list"></i> دسته بندی ها </li>
-                        <%}%>
-
-                            <li> <i class="bi bi-people"></i> کاربران </li>
-
-                            <% if(permissions.includes('VIEW_LOGS') || permissions.includes('ADMINISTRATOR')){ %>
-                                <li onclick="selectSec('log_template')"> <i class="bi bi-file-earmark-post"></i> لاگ ها
-                                </li>
+                            <% if(permissions.includes('VIEW_POSTS') || permissions.includes('ADMINISTRATOR')){ %>
+                                <li onclick="selectSec('Images_template')"><i class="bi bi-image"></i> عکس ها </li>
                                 <%}%>
+
+
+                                    <% if(permissions.includes('VIEW_CATEGORY') ||
+                                        permissions.includes('ADMINISTRATOR')){ %>
+                                        <li onclick="selectSec('category_template')"> <i class="bi bi-list"></i> دسته
+                                            بندی ها </li>
+                                        <%}%>
+
+                                            <li> <i class="bi bi-people"></i> کاربران </li>
+
+                                            <% if(permissions.includes('VIEW_LOGS') ||
+                                                permissions.includes('ADMINISTRATOR')){ %>
+                                                <li onclick="selectSec('log_template')"> <i
+                                                        class="bi bi-file-earmark-post"></i> لاگ ها
+                                                </li>
+                                                <%}%>
 
                 </ul>
 
@@ -167,7 +171,7 @@
 
 
 
-                 <div class="container p-5 text-dark">
+                <div class="container p-5 text-dark">
                     <form id="add_sub_cat" class="d-flex">
                         <input type="text" name="" id="input_sub_cat_name" class="form-control w-25 me-2">
                         <select id="select_sub_category" class="me-2">
@@ -191,18 +195,19 @@
             </template>
 
             <template id="post_template">
-             
+
             </template>
 
             <template id="Images_template">
                 <div class="container d-flex p-5 text-dark">
-                     <h5  class="me-5">عکس ها</h5>
-                     <form  id="Update_img_form">
-             <input type="file" name="myfile" id="file_img" required>
+                    <h5 class="me-5">عکس ها</h5>
+                    <form id="Update_img_form">
+                        <input type="file" name="myfile" id="file_img" required>
 
-              <button type="submit">آپلود</button>
-            </form>
-
+                        <button type="submit">آپلود</button>
+                    </form>
+                </div>
+                <div id="images" class="row">
                 </div>
             </template>
         </div>
@@ -214,66 +219,89 @@
         let categorys = []
         let sub_category = []
         let all_log_count = 0
+        let images = []
+        async function bindForm() {
+            document.getElementById('Update_img_form').addEventListener('submit', async (event) => {
+                const img = document.getElementById('file_img')
+                const formData = new FormData();
+                formData.append('myfile', img.files[0]);
 
-          function bindForm() {
-      document.getElementById('Update_img_form').addEventListener('submit', async (event) => {
-        const img = document.getElementById('file_img')
-        const formData = new FormData();
-        formData.append('myfile', img.files[0]);
+                event.preventDefault()
+                const result = await fetch('http://localhost:3000/get/images', {
+                    method: "POST",
+                    body: formData
+                })
 
-        event.preventDefault()
-        const result = await fetch('http://localhost:3000/upload/images', {
-          method: "POST",
-          body: formData
-        })
-
-        const data = await result.json()
-        console.log(data);
+                const data = await result.json()
+                console.log(data);
 
 
-      })
-    }
+            })
+
+            const result = await fetch('http://localhost:3000/get/images', {
+                method: "GET",
+            })
+
+            const images_div = document.getElementById('images')
+
+            images = await result.json()
+            images.forEach(img => {
+                const div = document.createElement('div')
+                div.classList.add('col-3')
+
+                div.innerHTML = `
+                         
+                     <img src="http://localhost:3000/images/${img.name}">
+
+                      <h3 class="text-dark">${img.name}</h3>
+
+                     `
+
+                images_div.appendChild(div)
+            })
+
+        }
 
 
         function add_cat() {
             document.getElementById('add_cat').addEventListener('submit', async (event) => {
-            event.preventDefault()
-            const name = document.getElementById('input_cat_name').value
+                event.preventDefault()
+                const name = document.getElementById('input_cat_name').value
 
-            const result = await fetch('http://localhost:3000/post/category/add', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body : JSON.stringify({name})
+                const result = await fetch('http://localhost:3000/post/category/add', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name })
 
+                })
+                const data = await result.json()
+                alert(data)
+                get_category()
             })
-            const data = await result.json()
-            alert(data)
-            get_category()
-        })
         }
 
 
 
-         function add_sub_cat() {
+        function add_sub_cat() {
             document.getElementById('add_sub_cat').addEventListener('submit', async (event) => {
-            event.preventDefault()
-            const name = document.getElementById('input_sub_cat_name').value
-            const category_id = document.getElementById('select_sub_category').value
+                event.preventDefault()
+                const name = document.getElementById('input_sub_cat_name').value
+                const category_id = document.getElementById('select_sub_category').value
 
-            const result = await fetch('http://localhost:3000/post/sub/category/add', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body : JSON.stringify({name , category_id})
+                const result = await fetch('http://localhost:3000/post/sub/category/add', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, category_id })
 
+                })
+                const data = await result.json()
+                alert(data)
+                get_category()
             })
-            const data = await result.json()
-            alert(data)
-            get_category()
-        })
         }
 
 
@@ -311,7 +339,7 @@
                 const option = document.createElement('option')
                 option.value = category.id
                 option.innerText = category.name
-                
+
                 select_sub_category.appendChild(option)
 
             })
@@ -354,14 +382,16 @@
             const template = document.getElementById(sectionid);
             document.getElementById('MainContent').innerHTML = template.innerHTML;
 
-            if(sectionid === "category_template"){
+            if (sectionid === "category_template") {
                 add_cat()
                 add_sub_cat()
             }
 
-            if(sectionid === "Images_template"){
+            if (sectionid === "Images_template") {
                 bindForm()
             }
+
+
         }
         async function get_logs() {
             logs = []

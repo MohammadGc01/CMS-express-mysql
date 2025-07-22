@@ -57,9 +57,11 @@ async function delete_sub_category(req ,res) {
 
 
 async function CREATE_POST(req , res) {
+   console.log(req.body);
+
     const {title , description , more_description , category_id , sub_category_id, img_path}  = req.body 
     if(!title || !description || !more_description || !category_id || !sub_category_id || !img_path) return res.json("شما هیچ  اطلاعاتی وارد نکردید")
-        const sql = "INSERT INTO post(title , description , more_description , category_id , sub_category_id , img_path) VALUES(?,?,?,?,?,?)"
+        const sql = "INSERT INTO posts(title , description , more_description , category_id , sub_category_id , img_path) VALUES(?,?,?,?,?,?)"
     db.query(sql, [title , description , more_description , category_id , sub_category_id , img_path], async (err , result) => {
       if(err){
 

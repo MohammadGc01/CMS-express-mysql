@@ -202,7 +202,80 @@
             </template>
 
             <template id="post_template">
+                <div class="container p-5 d-flex">
+                    <div class="row p-2">
+                        <div class="col-2">
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                                <i class="bi bi-plus-square"></i> پست جدید
+                            </button>
 
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form class="p-4 border rounded"
+                                                style="max-width: 600px; margin: auto;" id="form_create_post">
+                                                <div class="mb-3">
+                                                    <label for="title" class="form-label">عنوان</label>
+                                                    <input type="text" class="form-control" id="title" name="title"
+                                                        placeholder="عنوان را وارد کنید" required>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="description" class="form-label">توضیحات</label>
+                                                    <textarea class="form-control" id="description" name="description"
+                                                        rows="4" placeholder="متن توضیحات"></textarea>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="more_description" class="form-label">توضیحات
+                                                        بیشتر</label>
+                                                    <textarea class="form-control" id="more_description"
+                                                        name="more_description" rows="4"
+                                                        placeholder="توضیحات بیشتر"></textarea>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="category_id" class="form-label">شناسه دسته‌بندی</label>
+                                                    <input type="number" class="form-control" id="category_id"
+                                                        name="category_id" placeholder="شماره دسته‌بندی" required>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="sub_category_id" class="form-label">شناسه زیر
+                                                        دسته</label>
+                                                    <input type="number" class="form-control" id="sub_category_id"
+                                                        name="sub_category_id" placeholder="شماره زیر دسته" required>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="img_path" class="form-label">نام تصویر (بدون
+                                                        فایل)</label>
+                                                    <input type="text" class="form-control" id="img_path"
+                                                        name="img_path" placeholder="نام تصویر" required>
+                                                </div>
+
+                                                <button type="submit" class="btn btn-primary w-100">ارسال</button>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </template>
 
             <template id="Images_template">
@@ -227,6 +300,50 @@
         let sub_category = []
         let all_log_count = 0
         let images = []
+
+        function create_post(){
+document.getElementById('form_create_post').addEventListener('submit', function(event) {
+    event.preventDefault(); // جلوگیری از ارسال پیش‌فرض فرم
+
+    // جمع‌آوری داده‌های فرم
+    const formData = {
+        title: document.getElementById('title').value,
+        description: document.getElementById('description').value,
+        more_description: document.getElementById('more_description').value,
+        category_id: parseInt(document.getElementById('category_id').value),
+        sub_category_id: parseInt(document.getElementById('sub_category_id').value),
+        img_path: document.getElementById('img_path').value
+    };
+
+    // ارسال داده‌ها با fetch به API
+    fetch('http://localhost:3000/post/create', { // آدرس API خود را جایگزین کنید
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('خطا در ارسال دیتا');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // عملیات بعد از موفقیت
+        alert('پوشش با موفقیت ارسال شد!');
+        console.log(data);
+        // در صورت نیاز، فرم را ریست کنید
+        document.getElementById('form_create_post').reset();
+    })
+    .catch(error => {
+        alert('خطا: ' + error.message);
+        console.error('Error:', error);
+    });
+});
+        }
+
+        
         async function bindForm() {
             document.getElementById('Update_img_form').addEventListener('submit', async (event) => {
                 const img = document.getElementById('file_img')
@@ -411,6 +528,9 @@
                 bindForm()
             }
 
+            if(sectionid === "post_template"){
+                create_post()
+            }
 
         }
         async function get_logs() {

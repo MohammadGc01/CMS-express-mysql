@@ -57,8 +57,6 @@ async function delete_sub_category(req ,res) {
 
 
 async function CREATE_POST(req , res) {
-   console.log(req.body);
-
     const {title , description , more_description , category_id , sub_category_id, img_path}  = req.body 
     if(!title || !description || !more_description || !category_id || !sub_category_id || !img_path) return res.json("شما هیچ  اطلاعاتی وارد نکردید")
         const sql = "INSERT INTO posts(title , description , more_description , category_id , sub_category_id , img_path) VALUES(?,?,?,?,?,?)"
@@ -72,6 +70,13 @@ async function CREATE_POST(req , res) {
     })
 }
 
+async function get_all_post(req ,res) {
+    db.query("SELECT * FROM posts", (err ,result) => {
+        if(err) return res.json(err)
+            res.json(result)
+    })
+}
+
 module.exports = {
     get_categorys,
     add_category,
@@ -80,4 +85,5 @@ module.exports = {
     delete_category,
     delete_sub_category,
     CREATE_POST,
+    get_all_post,
 }

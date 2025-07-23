@@ -1,4 +1,6 @@
-const { get_categorys, add_category, get_sub_categorys, add_sub_category, delete_category, delete_sub_category, CREATE_POST } = require("../controller/post_controller");
+const { get_categorys, add_category, get_sub_categorys,
+   add_sub_category, delete_category, delete_sub_category,
+    CREATE_POST, get_all_post } = require("../controller/post_controller");
 const { authentication, authorization } = require("../middleware/auth");
 const Permissions = require("../constants/Permission");
 const { checkPermission } = require("../middleware/checkPermission");
@@ -42,6 +44,10 @@ router.post('/create', authentication, async (req , res) => {
   const canAccess = await checkPermission(user.roles,Permissions.CREATE_POST);
   if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
   CREATE_POST(req , res)
+})
+
+router.get('/get/all', (req , res) => {
+   get_all_post(req , res)
 })
 
 module.exports = router

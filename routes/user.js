@@ -5,6 +5,8 @@ const {
   createRole,
   deleteRole,
   getPrmission,
+  get_user_role,
+  get_role_all,
 } = require("../controller/user_controller");
 const { authentication , authorization } = require("../middleware/auth");
 const { checkPermission } = require("../middleware/checkPermission");
@@ -116,6 +118,12 @@ router.post('/role/remove/:user_id', authentication , async (req , res) => {
 })
 
 
+router.get('/role/get/all', authentication , async (req , res) => {
+   const user = await authorization(req);
+  const canAccess = await checkPermission(user.roles,Permissions.VIEW_ROLE);
+  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+   get_role_all(req , res)
+})
 
 router.get('/logout', (req , res) => {
   req.session.destroy()

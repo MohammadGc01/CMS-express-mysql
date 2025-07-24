@@ -294,6 +294,13 @@ async function getPrmission(roles) {
 }
 
 
+async function get_role_all(req , res) {
+    db.query('SELECT * FROM roles', (err , result) => {
+      if(err) return res.json(err)
+        res.json(result)
+    })
+}
+
 module.exports = {
   RegisterUser,
   LoginUser,
@@ -303,4 +310,5 @@ module.exports = {
   addRole,
   removeRole,
   getPrmission,
+  get_role_all,
 };

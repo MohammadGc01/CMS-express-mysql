@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="./css/home.css" />
     <title>ماد اسکیپ</title>
+
 </head>
 
 <body>
@@ -42,8 +43,13 @@
         </div>
         <div class="container">
             <div class="row">
-                <div class="col-9" id="post_result"></div>
-                <div class="col-3" id="category_result">w</div>
+                <div class="col-9 shadow" id="post_result">
+                  <div class="d-flex">
+
+                  </div>
+                </div>
+                <div class="col-3 shadow" id="category_result">
+                </div>
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -78,30 +84,28 @@
 
                 posts.forEach(post => {
                     const div = document.createElement('div')
+                    div.classList.add('row', 'p-4')
 
                     div.innerHTML = `
-                     <div class="card" style="width: 18rem;">
-  <img src="http://localhost:3000/images/${post.img_path}" class="card-img-top" alt="${post.img_path}">
-  <div class="card-body">
-    <h5 class="card-title">${post.title}</h5>
-    <p class="card-text">${post.description}</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
-  </div>
-</div>
-                     
+                    
+                        <div class="col-6">
+                            <div> <img src="http://localhost:3000/images/${post.img_path}" class="rounded-4" id="posts_img" width="400px" alt=""></div>
+                        </div>
+                        <div class="col-4 p-2">
+                               <div class="d-flex justify-content-between pe-4">
+                                   <h5>${post.title}</h5> 
+                                  <span> بازید : 50</span>
+                               </div>
+
+                                  <p class=" py-2">${post.description}</p>
+                                  
+                                 <button class="btn btn-outline-primary ">ادامه مطلب</button>
+                         </div>
                      `
 
                      post_result.appendChild(div)
                 });
 
-          }
-
-          async function get_categorys() {
-               const result_post = await fetch('http://localhost:3000/post/get/all', {
-                    method: "GET"
-                })
-                const posts = await result_post.json()
-                const category_result = document.getElementById('post_result')
           }
 
 

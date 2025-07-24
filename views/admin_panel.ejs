@@ -331,7 +331,7 @@ document.getElementById('form_create_post').addEventListener('submit', function(
     })
     .then(data => {
         // عملیات بعد از موفقیت
-        alert('پوشش با موفقیت ارسال شد!');
+        alert(data);
         console.log(data);
         // در صورت نیاز، فرم را ریست کنید
         document.getElementById('form_create_post').reset();

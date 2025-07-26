@@ -77,6 +77,8 @@ async function get_all_post(req ,res) {
     })
 }
 
+
+
 module.exports = {
     get_categorys,
     add_category,

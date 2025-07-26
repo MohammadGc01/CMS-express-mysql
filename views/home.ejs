@@ -48,21 +48,6 @@
             <div class="row">
                 <div class="col-9 shadow" >
                       <div class="row p-4" id="post_result"> 
-
-                       
-
-                          <div class="card-post">
-                            <img src="http://localhost:3000/images/Gtasa_CJ_pc" alt="">
-                             <h4>ماد چامپیوتر</h4>
-                             <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni, non!
-                             </p>
-                             <a href="#">ادامه مطلاب</a>
-                         </div>
-
-                         
-
-  
     
                       </div>
                 </div>
@@ -93,35 +78,40 @@
                 },
             });
 
+async function get_posts() {
+  const res = await fetch('http://localhost:3000/post/get/all');
+  const posts = await res.json();
+  const post_result = document.getElementById('post_result');
 
-          async function get_posts() {
-               const result_post = await fetch('http://localhost:3000/post/get/all', {
-                    method: "GET"
-                })
-                const posts = await result_post.json()
-                
-                const post_result = document.getElementById('post_result')
+  posts.forEach(post => {
+    const time = formatDate(post.create_time);
+    const div = document.createElement('div');
+    div.classList.add('card-post');
 
-                posts.forEach(post => {
-                  const div = document.createElement('div')
-                  div.classList.add('card-post')
+    div.innerHTML = `
+      <img src="http://localhost:3000/images/${post.img_path}" alt="${post.title}">
+      <h4>${post.title}</h4>
+      <p>${post.description}</p>
+      <span>${post.views} بازدید</span>
+      <span class="create_time">${time}</span>
+      <hr>
+      <a href="#">ادامه مطالب</a>
+    `;
+    post_result.appendChild(div);
+  });
+}
 
-                  div.innerHTML = `
-                            <img src="http://localhost:3000/images/${post.img_path}" alt="">
-                             <h4> ${post.title} </h4>
-                             <p>
-                               ${post.description}
-                             </p>
-                             <a href="#">ادامه مطلاب</a>
-                  `
-                post_result.appendChild(div)
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('fa-IR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
 
-                });
+get_posts();
 
-          }
-
-
-          get_posts()
 
 
         async function get_category() {

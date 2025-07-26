@@ -80,3 +80,39 @@ body {
   transition: 0.5s;
 }
 
+
+.DropDown {
+  text-align: center;
+  border-radius: 20px;
+  list-style: none;
+  padding-top: 15px;
+  padding-bottom: 20px;
+  margin-top: 10px;
+  overflow: hidden;
+  transition: all 0.4s ease-in-out;
+  background-color: #1c1c1c;
+}
+
+.DropDown li {
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: all 0.4s ease;
+  padding: 12px 0;
+  display: none;
+}
+
+.DropDown li:hover {
+  background-color: #389bd4;
+}
+
+.DropDown li a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.DropDown:hover li {
+  display: block;
+  transform: translateY(0);
+  pointer-events: auto;
+  box-shadow: 0 1px 10px 1px rgba(0, 140, 255, 0.733);
+}

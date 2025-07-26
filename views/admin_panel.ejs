@@ -63,10 +63,90 @@
         .info_back {
             background-color: rgb(100, 100, 100) !important;
         }
+
+        .card-post {
+            max-width: 300px !important;
+            border-radius: 28px;
+            height: 400px;
+            background-color: rgba(49, 47, 47, 0.719);
+            position: relative;
+            margin: 6px;
+            transition: 0.5s;
+        }
+
+        .card-post:hover {
+            margin-top: -5px;
+            box-shadow: 0 1px 10px 1px rgba(0, 140, 255, 0.733);
+            transition: 0.5s;
+        }
+
+        .card-post img {
+            width: 300px;
+            border-top-left-radius: 28px;
+            border-top-right-radius: 28px;
+            margin-right: -12px;
+        }
+
+        .card-post h4 {
+            text-align: center;
+            padding-top: 16px;
+            font-size: 20px;
+        }
+
+        .card-post p {
+            text-align: center;
+            padding-top: 20px;
+        }
+
+        .card-post a {
+            text-decoration: none;
+            color: white;
+            background-color: rgb(0, 140, 255);
+            padding: 10px;
+            position: absolute;
+            right: 200px;
+            top: 356px;
+            border-top-right-radius: 28px;
+            border-bottom-left-radius: 28px;
+            transition: 0.5s;
+        }
+
+        .card-post a:hover {
+            color: #121212;
+            background-color: rgb(0, 174, 255);
+            transition: 0.5s;
+        }
+
+        .card-post span {
+            position: absolute;
+            top: 140px;
+            right: 20px;
+            color: #000;
+        }
+
+        .card-post .create_time {
+            position: absolute;
+            top: 360px;
+            right: 80px;
+            color: white;
+        }
+
+        .card-post button {
+            background-color: red;
+            border: none;
+            padding: 10px;
+            position: absolute;
+            top: 356px;
+            right: 0;
+            border-top-left-radius: 28px;
+            border-bottom-right-radius: 28px;
+        }
     </style>
 </head>
 
 <body>
+
+
 
 
     <div class="container-fluid">
@@ -222,8 +302,8 @@
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form class="p-4 border rounded"
-                                                style="max-width: 600px; margin: auto;" id="form_create_post">
+                                            <form class="p-4 border rounded" style="max-width: 600px; margin: auto;"
+                                                id="form_create_post">
                                                 <div class="mb-3">
                                                     <label for="title" class="form-label">عنوان</label>
                                                     <input type="text" class="form-control" id="title" name="title"
@@ -275,6 +355,10 @@
 
                         </div>
                     </div>
+
+                    <div class="row p-4" id="post_result">
+
+                    </div>
                 </div>
             </template>
 
@@ -301,49 +385,88 @@
         let all_log_count = 0
         let images = []
 
-        function create_post(){
-document.getElementById('form_create_post').addEventListener('submit', function(event) {
-    event.preventDefault(); // جلوگیری از ارسال پیش‌فرض فرم
 
-    // جمع‌آوری داده‌های فرم
-    const formData = {
-        title: document.getElementById('title').value,
-        description: document.getElementById('description').value,
-        more_description: document.getElementById('more_description').value,
-        category_id: parseInt(document.getElementById('category_id').value),
-        sub_category_id: parseInt(document.getElementById('sub_category_id').value),
-        img_path: document.getElementById('img_path').value
-    };
+        async function get_posts() {
+            const res = await fetch('http://localhost:3000/post/get/all');
+            const posts = await res.json();
+            const post_result = document.getElementById('post_result');
 
-    // ارسال داده‌ها با fetch به API
-    fetch('http://localhost:3000/post/create', { // آدرس API خود را جایگزین کنید
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('خطا در ارسال دیتا');
-        }
-        return response.json();
-    })
-    .then(data => {
-        // عملیات بعد از موفقیت
-        alert(data);
-        console.log(data);
-        // در صورت نیاز، فرم را ریست کنید
-        document.getElementById('form_create_post').reset();
-    })
-    .catch(error => {
-        alert('خطا: ' + error.message);
-        console.error('Error:', error);
-    });
-});
+            posts.forEach(post => {
+                const time = formatDate(post.create_time);
+                const div = document.createElement('div');
+                div.classList.add('card-post');
+
+                div.innerHTML = `
+      <img src="http://localhost:3000/images/${post.img_path}" alt="${post.title}">
+      <h4>${post.title}</h4>
+      <p>${post.description}</p>
+      <span>${post.views} بازدید</span>
+      <span class="create_time">${time}</span>
+      <hr>
+    <button>حذف</button>
+
+      <a href="#">ادامه مطالب</a>
+    `;
+                post_result.appendChild(div);
+            });
         }
 
-        
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('fa-IR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+
+
+
+
+        function create_post() {
+            document.getElementById('form_create_post').addEventListener('submit', function (event) {
+                event.preventDefault(); // جلوگیری از ارسال پیش‌فرض فرم
+
+                // جمع‌آوری داده‌های فرم
+                const formData = {
+                    title: document.getElementById('title').value,
+                    description: document.getElementById('description').value,
+                    more_description: document.getElementById('more_description').value,
+                    category_id: parseInt(document.getElementById('category_id').value),
+                    sub_category_id: parseInt(document.getElementById('sub_category_id').value),
+                    img_path: document.getElementById('img_path').value
+                };
+
+                // ارسال داده‌ها با fetch به API
+                fetch('http://localhost:3000/post/create', { // آدرس API خود را جایگزین کنید
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('خطا در ارسال دیتا');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // عملیات بعد از موفقیت
+                        alert(data);
+                        console.log(data);
+                        // در صورت نیاز، فرم را ریست کنید
+                        document.getElementById('form_create_post').reset();
+                    })
+                    .catch(error => {
+                        alert('خطا: ' + error.message);
+                        console.error('Error:', error);
+                    });
+            });
+        }
+
+
         async function bindForm() {
             document.getElementById('Update_img_form').addEventListener('submit', async (event) => {
                 const img = document.getElementById('file_img')
@@ -528,8 +651,10 @@ document.getElementById('form_create_post').addEventListener('submit', function(
                 bindForm()
             }
 
-            if(sectionid === "post_template"){
+            if (sectionid === "post_template") {
                 create_post()
+                get_posts();
+
             }
 
         }

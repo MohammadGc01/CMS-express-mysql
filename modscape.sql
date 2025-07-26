@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2025 at 12:46 PM
+-- Generation Time: Jul 26, 2025 at 10:06 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -72,6 +72,25 @@ INSERT INTO `contacts` (`id`, `name`, `email`, `subject`, `text`, `isRegister`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `images`
+--
+
+CREATE TABLE `images` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL COMMENT 'INT',
+  `create_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT 'INT'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `images`
+--
+
+INSERT INTO `images` (`id`, `name`, `create_time`) VALUES
+(1, 'impressive_weapon', '2025-07-25 20:52:37');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `logs`
 --
 
@@ -136,7 +155,13 @@ INSERT INTO `logs` (`id`, `title`, `message`, `level`, `ip`, `time`) VALUES
 (50, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ تیر ۲۹, یکشنبه ساعت ۱۹:۴۳:۲۹'),
 (51, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ تیر ۲۹, یکشنبه ساعت ۱۹:۴۴:۳۷'),
 (52, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ تیر ۲۹, یکشنبه ساعت ۱۹:۵۳:۴۴'),
-(53, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ تیر ۲۹, یکشنبه ساعت ۲۰:۱۰:۳۹');
+(53, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ تیر ۲۹, یکشنبه ساعت ۲۰:۱۰:۳۹'),
+(54, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۴, شنبه ساعت ۰:۱۹:۰۹'),
+(55, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۴, شنبه ساعت ۰:۱۹:۱۰', 'info', 'NONE', '۱۴۰۴ مرداد ۴, شنبه ساعت ۰:۱۹:۱۵'),
+(56, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۴, شنبه ساعت ۰:۲۳:۴۸'),
+(57, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۴, شنبه ساعت ۰:۲۳:۴۸', 'info', 'NONE', '۱۴۰۴ مرداد ۴, شنبه ساعت ۰:۲۳:۵۳'),
+(58, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۴, شنبه ساعت ۲۳:۱۵:۰۸'),
+(59, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۴, شنبه ساعت ۲۳:۱۵:۰۸', 'info', 'NONE', '۱۴۰۴ مرداد ۴, شنبه ساعت ۲۳:۱۵:۱۴');
 
 -- --------------------------------------------------------
 
@@ -153,8 +178,16 @@ CREATE TABLE `posts` (
   `sub_category_id` int(25) NOT NULL,
   `category_id` int(25) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `views` int(255) NOT NULL
+  `views` int(255) NOT NULL,
+  `img_path` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `posts`
+--
+
+INSERT INTO `posts` (`id`, `title`, `description`, `more_description`, `image_path`, `sub_category_id`, `category_id`, `create_time`, `views`, `img_path`) VALUES
+(1, 'ماد  impressive_weapon gta sa', '\n\nThe Immersive Weapons Pack is a high-quality, lore-friendly weapon overhaul for GTA San Andreas, ', '\n\nThe Immersive Weapons Pack is a high-quality, lore-friendly weapon overhaul for GTA San Andreas, designed to enhance realism, immersion, and gameplay variety. This mod replaces every in-game weapon with detailed new models, featuring custom animations p', '', 1, 1, '2025-07-25 20:55:12', 0, 'impressive_weapon');
 
 -- --------------------------------------------------------
 
@@ -282,6 +315,12 @@ ALTER TABLE `contacts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `images`
+--
+ALTER TABLE `images`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `logs`
 --
 ALTER TABLE `logs`
@@ -340,16 +379,22 @@ ALTER TABLE `contacts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `images`
+--
+ALTER TABLE `images`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `roles`

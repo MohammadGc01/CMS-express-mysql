@@ -46,8 +46,6 @@ router.post('/create', authentication, async (req , res) => {
   CREATE_POST(req , res)
 })
 
-router.get('/get/all', (req , res) => {
-   get_all_post(req , res)
-})
+router.get('/get/all',   get_all_post)
 
 module.exports = router

@@ -23,6 +23,9 @@
                             <img src="http://localhost:3000/images/ads1" alt="تبلیغ ۲" class="img-fluid" />
                         </a>
                     </div>
+                    <div>
+
+                    </div>
                     <div class="swiper-slide">
                         <a href="#" target="_blank" class="">
                             <img src="http://localhost:3000/images/ads1" alt="تبلیغ ۲" class="img-fluid" />
@@ -41,14 +44,30 @@
             </div>
         </div>
         </div>
-        <div class="container">
+        <div class="container pb-5">
             <div class="row">
-                <div class="col-9 shadow" id="post_result">
-                  <div class="d-flex">
+                <div class="col-9 shadow" >
+                      <div class="row p-4" id="post_result"> 
 
-                  </div>
+                       
+
+                          <div class="card-post">
+                            <img src="http://localhost:3000/images/Gtasa_CJ_pc" alt="">
+                             <h4>ماد چامپیوتر</h4>
+                             <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni, non!
+                             </p>
+                             <a href="#">ادامه مطلاب</a>
+                         </div>
+
+                         
+
+  
+    
+                      </div>
                 </div>
                 <div class="col-3 shadow" id="category_result">
+                    w
                 </div>
             </div>
         </div>
@@ -80,30 +99,24 @@
                     method: "GET"
                 })
                 const posts = await result_post.json()
+                console.log(posts);
+                
                 const post_result = document.getElementById('post_result')
 
                 posts.forEach(post => {
-                    const div = document.createElement('div')
-                    div.classList.add('row', 'p-4')
+                  const div = document.createElement('div')
+                  div.classList.add('card-post')
 
-                    div.innerHTML = `
-                    
-                        <div class="col-6">
-                            <div> <img src="http://localhost:3000/images/${post.img_path}" class="rounded-4" id="posts_img" width="400px" alt=""></div>
-                        </div>
-                        <div class="col-4 p-2">
-                               <div class="d-flex justify-content-between pe-4">
-                                   <h5>${post.title}</h5> 
-                                  <span> بازید : 50</span>
-                               </div>
+                  div.innerHTML = `
+                            <img src="http://localhost:3000/images/${post.img_path}" alt="">
+                             <h4> ${post.title} </h4>
+                             <p>
+                               ${post.description}
+                             </p>
+                             <a href="#">ادامه مطلاب</a>
+                  `
+                post_result.appendChild(div)
 
-                                  <p class=" py-2">${post.description}</p>
-                                  
-                                 <button class="btn btn-outline-primary ">ادامه مطلب</button>
-                         </div>
-                     `
-
-                     post_result.appendChild(div)
                 });
 
           }

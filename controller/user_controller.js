@@ -150,13 +150,6 @@ async function createRole(req, res) {
       });
     }
 
-    const log = new logger(
-      "info",
-      `
-            نقش ${name} با رنگ ${color} با موفقیت ایجاد شد
-            `
-    );
-    await log.save();
     res.json({
       success: true,
       message: "نقش با موفقیت ایجاد شد",
@@ -174,7 +167,7 @@ async function deleteRole(req, res) {
         message : "موقع حذف رول مشکلی به وجود امد دوباره امتحان کنید"
       })
     }
-     res.json({message : `رول ${result} با موفقیت حذف شد`})
+     res.json({message : `رول ${id} با موفقیت حذف شد`})
   })
 }
 

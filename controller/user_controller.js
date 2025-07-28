@@ -134,21 +134,19 @@ async function LoginUser(req, res) {
 
 async function createRole(req, res) {
   const { name} = req.body;
-  const sql = "INSERT INTO roles(name) VALUES (?)";
+  const sql = "INSERT INTO roles(name) VALUES (?)"
   db.query(sql, [name], async (err, result) => {
     if (err) {
-      const log = new logger(
-        "error",
-        `
-        خطایی در هنگام ایجاد نقش رخ داد
-        `
-      );
+      const log = new logger('ایجاد نقش', `خطا در هنگام ایجاد نقش: ${err.message}`, 'error', req.ip);
       await log.save();
       return res.json({
         message: "خطایی در هنگام ایجاد نقش رخ داد",
         status: 500,
       });
     }
+
+    const log = new logger('ایجاد نقش', `نقش جدید با نام ${name} ایجاد شد`, 'success', req.ip);
+    await log.save();
 
     res.json({
       success: true,

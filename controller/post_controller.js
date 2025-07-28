@@ -1,3 +1,4 @@
+const { promises } = require("nodemailer/lib/xoauth2")
 const db = require("../database/connection")
 
 async function get_categorys(req , res) {
@@ -78,7 +79,66 @@ async function get_all_post(req ,res) {
 }
 
 
+async function get_post(id) {
+   return new Promise((resolve , reject) => {
+     db.query("SELECT * FROM posts WHERE id=?", id , (err ,result) => {
+        if(err) return reject(err)
+            return resolve(result)
+    })
+   })
+}
 
+
+async function delete_post(req, res) {
+ const { id } = req.params;
+ const sql = "DELETE FROM posts WHERE id = ?";
+ db.query(sql, id, (err, result) => {
+    if (err) return res.json(err);
+    res.json('پست شما حذف شد')
+    })
+}
+async function edit_post(req, res) {
+  const { id } = req.params;
+  const {
+    title,
+    description,
+    more_description,
+    image_path,
+    sub_category_id,
+    category_id,
+    views,
+    img_path
+  } = req.body;
+
+  const sql = `
+    UPDATE posts SET
+      title = ?,
+      description = ?,
+      more_description = ?,
+      image_path = ?,
+      sub_category_id = ?,
+      category_id = ?,
+      views = ?,
+      img_path = ?
+    WHERE id = ?`;
+
+  const values = [
+    title,
+    description,
+    more_description,
+    image_path,
+    sub_category_id,
+    category_id,
+    views,
+    img_path,
+    id
+  ];
+
+  db.query(sql ,  values , (err , result) => {
+    if(err) return res.json(err)
+        res.json('پست شما اپدیت شد')
+   })
+}
 module.exports = {
     get_categorys,
     add_category,
@@ -88,4 +148,7 @@ module.exports = {
     delete_sub_category,
     CREATE_POST,
     get_all_post,
+    get_post,
+    delete_post,
+    edit_post,
 }

@@ -85,7 +85,29 @@
             border-top-left-radius: 28px;
             border-top-right-radius: 28px;
             margin-right: -12px;
+            transition: 0.5s;
+
         }
+
+        .card-post .edit_post{
+            font-style: bold;
+            position: absolute;
+            right: 53px;
+            top: 356px;    
+            color: white;
+            background-color: gray; 
+            width: 147px;
+            padding: 8.8px;
+            border-bottom-left-radius: 0 !important;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.5s;
+
+        }
+        .card-post .edit_post:hover{
+            transition: 0.5s;
+            background-color: rgb(71, 66, 66);
+        } 
 
         .card-post h4 {
             text-align: center;
@@ -106,7 +128,6 @@
             position: absolute;
             right: 200px;
             top: 356px;
-            border-top-right-radius: 28px;
             border-bottom-left-radius: 28px;
             transition: 0.5s;
         }
@@ -124,12 +145,6 @@
             color: #000;
         }
 
-        .card-post .create_time {
-            position: absolute;
-            top: 360px;
-            right: 80px;
-            color: white;
-        }
 
         .card-post button {
             background-color: red;
@@ -138,9 +153,10 @@
             position: absolute;
             top: 356px;
             right: 0;
-            border-top-left-radius: 28px;
             border-bottom-right-radius: 28px;
         }
+
+
     </style>
 </head>
 
@@ -378,12 +394,46 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         let logs = []
         let categorys = []
         let sub_category = []
         let all_log_count = 0
         let images = []
+
+
+        async function delete_post(id) {
+
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+
+                    const res = await fetch(`http://localhost:3000/post/delete/${id}`, {
+                        method: "DELETE"
+                    });
+
+
+                    if (res.ok) {
+
+                        const data = await res.json();
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: data,
+                            icon: "success"
+                        });
+                    }
+                }
+            });
+        }
 
 
         async function get_posts() {
@@ -401,9 +451,9 @@
       <h4>${post.title}</h4>
       <p>${post.description}</p>
       <span>${post.views} بازدید</span>
-      <span class="create_time">${time}</span>
+      <a href="http://localhost:3000/post/edit/${post.id}" class="edit_post"><i class="bi bi-pencil-fill"></i> ویرایش</a>
       <hr>
-    <button>حذف</button>
+    <button onclick="delete_post(${post.id})">حذف</button>
 
       <a href="#">ادامه مطالب</a>
     `;

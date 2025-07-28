@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ویرایش پست</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: linear-gradient(to right, #f1f5f9, #f8fafc);
+      color: #1e293b;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 30px;
+      color: #0f172a;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 0 auto 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    form {
+      max-width: 720px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #475569;
+      margin-top: 20px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.25s ease;
+      background-color: #f9fafb;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #3b82f6;
+      background-color: #fff;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+      outline: none;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    button[type="submit"] {
+      margin-top: 30px;
+      display: inline-block;
+      width: 100%;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      padding: 14px 0;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #2563eb;
+      transform: scale(1.02);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 10px;
+      }
+
+      form {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+    <h1>ویرایش پست</h1>
+    <img src="http://localhost:3000/images/<%= post[0].img_path%>" alt="تصویر پست"  id="first_img"/>
+
+    <form>
+        <label for="title">عنوان</label>
+        <input type="text" value="<%= post[0].title%>" id="title" />
+
+        <label for="description">توضیحات</label>
+        <textarea id="description"><%= post[0].description%></textarea>
+
+        <label for="more_description">توضیحات بیشتر</label>
+        <textarea id="more_description"><%= post[0].more_description%></textarea>
+
+        <label for="category_id">دسته‌بندی</label>
+        <input type="number" value="<%= post[0].category_id%>" id="category_id" />
+
+        <label for="sub_category_id">زیر دسته‌بندی</label>
+        <input type="number" value="<%= post[0].sub_category_id%>" id="sub_category_id" />
+
+        <label for="img_path">مسیر تصویر</label>
+        <input type="text" value="<%= post[0].img_path%>" id="img_path" />
+        <button type="submit">اپدیت</button>
+    </form>
+
+<script>
+  const img_path = document.getElementById('img_path');
+  const first_img = document.getElementById('first_img');
+
+  // تغییر داینامیک تصویر
+  img_path.addEventListener('input', (event) => {
+    event.preventDefault();
+    first_img.src = `http://localhost:3000/images/${img_path.value}`;
+  });
+
+  // هندل ارسال فرم
+  const form = document.querySelector('form');
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    // گرفتن مقادیر
+    const title = document.getElementById('title').value;
+    const description = document.getElementById('description').value;
+    const more_description = document.getElementById('more_description').value;
+    const category_id = document.getElementById('category_id').value;
+    const sub_category_id = document.getElementById('sub_category_id').value;
+    const img = img_path.value;
+
+    // ارسال به سرور
+    try {
+      const res = await fetch('http://localhost:3000/post/edit/<%= post[0].id %>', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          more_description,
+          category_id,
+          sub_category_id,
+          img_path: img,
+        }),
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        alert(result0);
+      } else {
+        alert("خطا در بروزرسانی: " + result.message);
+      }
+    } catch (error) {
+      console.error("خطا:", error);
+      alert("ارتباط با سرور برقرار نشد.");
+    }
+  });
+</script>
+
+</body>
+</html>

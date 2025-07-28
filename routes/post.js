@@ -1,9 +1,14 @@
 const { get_categorys, add_category, get_sub_categorys,
    add_sub_category, delete_category, delete_sub_category,
-    CREATE_POST, get_all_post } = require("../controller/post_controller");
+    CREATE_POST, get_all_post,
+    get_post,
+    delete_post,
+    edit_post, 
+    } = require("../controller/post_controller");
 const { authentication, authorization } = require("../middleware/auth");
 const Permissions = require("../constants/Permission");
 const { checkPermission } = require("../middleware/checkPermission");
+const { route } = require("./user");
 
 const router = require("express").Router();
 
@@ -37,8 +42,6 @@ router.post('/delete/sub_category/:id' , authentication, async (req , res) => {
   
 })
 
-
-
 router.post('/create', authentication, async (req , res) => {
    const user = await authorization(req);
   const canAccess = await checkPermission(user.roles,Permissions.CREATE_POST);
@@ -47,5 +50,31 @@ router.post('/create', authentication, async (req , res) => {
 })
 
 router.get('/get/all',   get_all_post)
+router.get('/get/:id', async (req , res) => {
+  const postdata = await get_post(req.params.id)
+  res.render('post_page', {post : postdata})
+})
+
+router.get('/edit/:id', authentication, async (req , res) => {
+     const user = await authorization(req);
+  const canAccess = await checkPermission(user.roles,Permissions.EDIT_POST);
+  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+  const postdata = await get_post(req.params.id)
+  res.render('partials/editpost', {post : postdata})
+})
+
+router.delete('/delete/:id', async (req, res) => {
+      const user = await authorization(req);
+  const canAccess = await checkPermission(user.roles,Permissions.DELETE_POST);
+  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+  delete_post(req , res)
+})
+
+router.put('/edit/:id', authentication , async (req  , res) => {
+     const user = await authorization(req);
+  const canAccess = await checkPermission(user.roles,Permissions.EDIT_POST);
+  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+  edit_post(req , res)
+})
 
 module.exports = router

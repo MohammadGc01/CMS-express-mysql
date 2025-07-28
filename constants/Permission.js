@@ -19,6 +19,7 @@ const Permission = {
     VIEW_POSTS: "VIEW_POSTS",
     CREATE_POST: "CREATE_POST",
     DELETE_POST: "DELETE_POST",
+    EDIT_POST: "EDIT_POST",
 };
 
 module.exports = Permission;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 27, 2025 at 12:29 AM
+-- Generation Time: Jul 30, 2025 at 02:21 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -86,7 +86,8 @@ CREATE TABLE `images` (
 --
 
 INSERT INTO `images` (`id`, `name`, `create_time`) VALUES
-(1, 'impressive_weapon', '2025-07-25 20:52:37');
+(1, 'impressive_weapon', '2025-07-25 20:52:37'),
+(2, 'OIP', '2025-07-27 13:10:50');
 
 -- --------------------------------------------------------
 
@@ -161,7 +162,33 @@ INSERT INTO `logs` (`id`, `title`, `message`, `level`, `ip`, `time`) VALUES
 (56, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۴, شنبه ساعت ۰:۲۳:۴۸'),
 (57, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۴, شنبه ساعت ۰:۲۳:۴۸', 'info', 'NONE', '۱۴۰۴ مرداد ۴, شنبه ساعت ۰:۲۳:۵۳'),
 (58, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۴, شنبه ساعت ۲۳:۱۵:۰۸'),
-(59, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۴, شنبه ساعت ۲۳:۱۵:۰۸', 'info', 'NONE', '۱۴۰۴ مرداد ۴, شنبه ساعت ۲۳:۱۵:۱۴');
+(59, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۴, شنبه ساعت ۲۳:۱۵:۰۸', 'info', 'NONE', '۱۴۰۴ مرداد ۴, شنبه ساعت ۲۳:۱۵:۱۴'),
+(60, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۵, یکشنبه ساعت ۱۴:۲۸:۳۹'),
+(61, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۵, یکشنبه ساعت ۱۴:۲۸:۳۹', 'info', 'NONE', '۱۴۰۴ مرداد ۵, یکشنبه ساعت ۱۴:۲۸:۴۳'),
+(62, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۵, یکشنبه ساعت ۱۶:۳۷:۰۴'),
+(63, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۵, یکشنبه ساعت ۱۶:۳۷:۰۴', 'info', 'NONE', '۱۴۰۴ مرداد ۵, یکشنبه ساعت ۱۶:۳۷:۰۹'),
+(64, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۵, یکشنبه ساعت ۱۶:۴۰:۱۴'),
+(65, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۵, یکشنبه ساعت ۱۶:۴۰:۱۴', 'info', 'NONE', '۱۴۰۴ مرداد ۵, یکشنبه ساعت ۱۶:۴۰:۱۸'),
+(66, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۵, یکشنبه ساعت ۲۱:۴۹:۰۷'),
+(67, 'ارسال نشدن ایمیل : Error', 'موقع ارسال ایمیل به : m.h.atashbar1@gmail.com با موضوع \n : ورود موفقیت آمیز \n و متن : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۵, یکشنبه ساعت ۲۱:۴۹:۰۷ مشکلی به وجود امد \n متن خطا  : queryA ETIMEOUT smtp.zoho.com', 'error', 'NONE', '۱۴۰۴ مرداد ۵, یکشنبه ساعت ۲۱:۵۲:۰۰'),
+(68, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۵, یکشنبه ساعت ۲۳:۰۱:۵۸'),
+(69, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۵, یکشنبه ساعت ۲۳:۰۱:۵۸', 'info', 'NONE', '۱۴۰۴ مرداد ۵, یکشنبه ساعت ۲۳:۰۲:۰۲'),
+(70, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۵, یکشنبه ساعت ۲۳:۲۶:۱۵'),
+(71, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۵, یکشنبه ساعت ۲۳:۲۶:۱۵', 'info', 'NONE', '۱۴۰۴ مرداد ۵, یکشنبه ساعت ۲۳:۲۶:۲۰'),
+(72, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۰۰:۱۰'),
+(73, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۰۰:۱۰', 'info', 'NONE', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۰۰:۱۵'),
+(74, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۱۹:۵۶'),
+(75, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۱۹:۵۶', 'info', 'NONE', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۲۰:۰۰'),
+(76, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۲۴:۱۵'),
+(77, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۲۴:۱۵', 'info', 'NONE', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۲۴:۱۸'),
+(78, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۲۴:۳۸'),
+(79, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۲۴:۳۸', 'info', 'NONE', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۲۴:۴۲'),
+(80, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۲۵:۱۲'),
+(81, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۲۵:۱۲', 'info', 'NONE', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۲۵:۱۶'),
+(82, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۲۵:۲۶'),
+(83, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۲۵:۲۶', 'info', 'NONE', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۱:۲۵:۳۰'),
+(84, 'ورود موفق', 'ورود موفق کاربر ali', 'success', '::1', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۲:۳۴:۱۰'),
+(85, 'ارسال موفق ایمیل', 'ایمیل جدیدی به  : m.h.atashbar1@gmail.com \n موضوع : ورود موفقیت آمیز \n با متن  : ورود شما موفقیت امیز بود  زمن ورود : ۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۲:۳۴:۱۰', 'info', 'NONE', '۱۴۰۴ مرداد ۶, دوشنبه ساعت ۲۲:۳۴:۱۵');
 
 -- --------------------------------------------------------
 
@@ -187,7 +214,7 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`id`, `title`, `description`, `more_description`, `image_path`, `sub_category_id`, `category_id`, `create_time`, `views`, `img_path`) VALUES
-(1, 'ماد  impressive_weapon gta sa', '\n\nThe Immersive Weapons Pack is a high-quality, lore-friendly weapon overhaul for GTA San Andreas, ', '\n\nThe Immersive Weapons Pack is a high-quality, lore-friendly weapon overhaul for GTA San Andreas, designed to enhance realism, immersion, and gameplay variety. This mod replaces every in-game weapon with detailed new models, featuring custom animations p', '', 1, 1, '2025-07-25 20:55:12', 0, 'impressive_weapon');
+(1, 'ماد  impressive_weapon gta sa', '\nThe Immersive Weapons Pack is a high-quality, lore-friendly weapon overhaul for GTA San Andreas, ', 'The Immersive Weapons Pack is a high-quality, lore-friendly weapon overhaul for GTA San Andreas, designed to enhance realism, immersion, and gameplay variety. This mod replaces every in-game weapon with detailed new models, featuring custom animations p', '', 1, 1, '2025-07-27 19:57:03', 0, 'impressive_weapon');
 
 -- --------------------------------------------------------
 
@@ -251,7 +278,8 @@ CREATE TABLE `sub_category` (
 --
 
 INSERT INTO `sub_category` (`id`, `name`, `category_id`, `create_time`) VALUES
-(1, 'ماشین', 1, '2025-07-20 19:00:37');
+(1, 'ماشین', 1, '2025-07-20 19:00:37'),
+(2, 'ماد پک ', 3, '2025-07-27 13:11:10');
 
 -- --------------------------------------------------------
 
@@ -382,25 +410,25 @@ ALTER TABLE `contacts`
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `role_permission`
@@ -412,7 +440,7 @@ ALTER TABLE `role_permission`
 -- AUTO_INCREMENT for table `sub_category`
 --
 ALTER TABLE `sub_category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`

@@ -114,6 +114,10 @@ async function LoginUser(req, res) {
 
     req.session.user = {id : user.id , username : user.username , email : user.email , roles : roles}
 
+      var hour = 3600000;
+      req.session.cookie.expires = new Date(Date.now() + hour);
+      req.session.cookie.maxAge = hour;
+
       const log = new logger('ورود موفق',`ورود موفق کاربر ${user.username}`,'success',req.ip)
       await log.save();
    
@@ -292,6 +296,44 @@ async function get_role_all(req , res) {
     })
 }
 
+async function getRoleById(user_id) {
+  return new Promise((resolve, reject) => {
+    db.query("SELECT * FROM roles WHERE id = ?", [user_id], (err, result) => {
+      if (err) return reject(err);
+      
+      resolve(result[0]);
+    });
+  });
+}
+
+async function getPermissionsByRoleId(role_id) {
+  return new Promise((resolve, reject) => {
+    db.query("SELECT * FROM role_permission WHERE role_id = ?", [role_id], (err, result) => {
+      if (err) return reject(err);
+      
+      resolve(result);
+    });
+  });
+}
+
+
+async function updaterole(req , res) {
+  const id = req.params.id
+  const name = req.body.name
+    console.log(id);
+    console.log(name);
+  
+  if (!id) {
+    return res.json('پارامتر ایدی را وارد نکردید')
+  }
+  const sql = `UPDATE roles SET name=?  WHERE id=?`;
+  db.query(sql, [name , id], (err, result) => {
+    if (err) return res.json(err.message)
+    res.json(result.message)
+  })
+}
+
+
 module.exports = {
   RegisterUser,
   LoginUser,
@@ -302,4 +344,7 @@ module.exports = {
   removeRole,
   getPrmission,
   get_role_all,
+  getRoleById,
+  getPermissionsByRoleId,
+  updaterole,
 };

@@ -89,13 +89,13 @@
 
         }
 
-        .card-post .edit_post{
+        .card-post .edit_post {
             font-style: bold;
             position: absolute;
             right: 53px;
-            top: 356px;    
+            top: 356px;
             color: white;
-            background-color: gray; 
+            background-color: gray;
             width: 147px;
             padding: 8.8px;
             border-bottom-left-radius: 0 !important;
@@ -104,10 +104,11 @@
             transition: 0.5s;
 
         }
-        .card-post .edit_post:hover{
+
+        .card-post .edit_post:hover {
             transition: 0.5s;
             background-color: rgb(71, 66, 66);
-        } 
+        }
 
         .card-post h4 {
             text-align: center;
@@ -155,15 +156,10 @@
             right: 0;
             border-bottom-right-radius: 28px;
         }
-
-
     </style>
 </head>
 
 <body>
-
-
-
 
     <div class="container-fluid">
         <div class="row">
@@ -206,7 +202,7 @@
                 <ul>
                     <hr>
                     <li> <i class="bi bi-brightness-high"></i> دارک مود </li>
-                    <a href="http://localhost:3000/user/logout">
+                    <a href="/user/logout">
                         <li class="text-danger bg-dark rounded-3"> <i class="bi bi-box-arrow-right"></i> خروج </li>
                     </a>
                 </ul>
@@ -221,7 +217,7 @@
                     <h2 class="text-dark mb-4">لاگ‌ها</h2>
 
                     <!-- نوبار فیلتر و جستجو -->
-                    <nav class="navbar bg-light rounded shadow-sm px-3 mb-4">
+                    <nav class="navbar fixed-top bg-light rounded shadow-sm px-3 mb-4">
                         <div class="container-fluid flex-wrap justify-content-between">
 
                             <div id="all_log_count" class="text-dark">تعداد کلی : </div>
@@ -238,7 +234,7 @@
                                     <i class="bi bi-arrow-clockwise"></i> رفرش
                                 </button>
                                 <button class="btn btn-outline-primary">
-                                    <a class="nav-link" href="http://localhost:3000/log/download/all">خروجی JSON</a>
+                                    <a class="nav-link" href="/log/download/all">خروجی JSON</a>
                                 </button>
                             </div>
                         </div>
@@ -391,13 +387,13 @@
                 </div>
             </template>
             <template id="roles_template">
-              <div class="container p-5">
-                <h5 class="me-5">نقش ها</h5>
-                  <input type="text" name="role_name" id="role_name" placeholder="نام نقش" required>
-                  <button type="submit" onclick="create_role()">اضافه کردن نقش</button>
-              </div>
-              <div class="container p-5">
-                   <table class="table text-dark" id="table">
+                <div class="container p-5">
+                    <h5 class="me-5">نقش ها</h5>
+                    <input type="text" name="role_name" id="role_name" placeholder="نام نقش" required>
+                    <button type="submit" onclick="create_role()">اضافه کردن نقش</button>
+                </div>
+                <div class="container p-5">
+                    <table class="table text-dark" id="table">
                         <tr>
                             <th class="col">ID</th>
                             <th class="col">نام نقش</th>
@@ -406,7 +402,7 @@
                             <th class="col btn btn-outline-primary" onclick="get_roles()">refresh</th>
                         </tr>
                     </table>
-              </div>
+                </div>
             </template>
         </div>
     </div>
@@ -425,7 +421,7 @@
 
 
         async function delete_role(id) {
-             Swal.fire({
+            Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",
                 icon: "warning",
@@ -436,7 +432,7 @@
             }).then(async (result) => {
                 if (result.isConfirmed) {
 
-                    const res = await fetch(`http://localhost:3000/user/role/delete/${id}`, {
+                    const res = await fetch(`/user/role/delete/${id}`, {
                         method: "DELETE"
                     });
 
@@ -456,7 +452,7 @@
         }
 
         async function get_roles() {
-            const res = await fetch('http://localhost:3000/user/role/get/all');
+            const res = await fetch('/user/role/get/all');
             const data = await res.json();
             roles = data;
             const table = document.getElementById('table');
@@ -476,7 +472,7 @@
                     <td>${role.name}</td>
                     <td>${formatDate(role.create_time)}</td>
                     <td>
-                        <button onclick="edit_role(${role.id})" class="btn btn-warning">ویرایش</button>
+                      <a href="/user/role/edit/${role.id}">  <button class="btn btn-warning">ویرایش</button></a>
                         <button onclick="delete_role(${role.id})" class="btn btn-danger">حذف</button>
                     </td>
                 `;
@@ -486,20 +482,20 @@
 
 
 
-    async function create_role() {
-         const role_name = document.getElementById('role_name').value;
-           const res = await fetch('http://localhost:3000/user/role/create', {
-               method: 'POST',
-               headers: {
-                   'Content-Type': 'application/json'
-               },
+        async function create_role() {
+            const role_name = document.getElementById('role_name').value;
+            const res = await fetch('/user/role/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({ name: role_name })
             });
             const data = await res.json();
             if (res.ok) {
                 get_roles();
             }
-    }
+        }
 
 
         async function delete_post(id) {
@@ -516,7 +512,7 @@
             }).then(async (result) => {
                 if (result.isConfirmed) {
 
-                    const res = await fetch(`http://localhost:3000/post/delete/${id}`, {
+                    const res = await fetch(`/post/delete/${id}`, {
                         method: "DELETE"
                     });
 
@@ -536,7 +532,7 @@
 
 
         async function get_posts() {
-            const res = await fetch('http://localhost:3000/post/get/all');
+            const res = await fetch('/post/get/all');
             const posts = await res.json();
             const post_result = document.getElementById('post_result');
 
@@ -546,11 +542,11 @@
                 div.classList.add('card-post');
 
                 div.innerHTML = `
-      <img src="http://localhost:3000/images/${post.img_path}" alt="${post.title}">
+      <img src="/images/${post.img_path}" alt="${post.title}">
       <h4>${post.title}</h4>
       <p>${post.description}</p>
       <span>${post.views} بازدید</span>
-      <a href="http://localhost:3000/post/edit/${post.id}" class="edit_post"><i class="bi bi-pencil-fill"></i> ویرایش</a>
+      <a href="/post/edit/${post.id}" class="edit_post"><i class="bi bi-pencil-fill"></i> ویرایش</a>
       <hr>
     <button onclick="delete_post(${post.id})">حذف</button>
 
@@ -588,7 +584,7 @@
                 };
 
                 // ارسال داده‌ها با fetch به API
-                fetch('http://localhost:3000/post/create', { // آدرس API خود را جایگزین کنید
+                fetch('/post/create', { // آدرس API خود را جایگزین کنید
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -623,7 +619,7 @@
                 formData.append('myfile', img.files[0]);
 
                 event.preventDefault()
-                const result = await fetch('http://localhost:3000/upload/images', {
+                const result = await fetch('/upload/images', {
                     method: "POST",
                     body: formData
                 })
@@ -634,7 +630,7 @@
 
             })
 
-            const result = await fetch('http://localhost:3000/get/images', {
+            const result = await fetch('/get/images', {
                 method: "GET",
             })
 
@@ -647,7 +643,7 @@
 
                 div.innerHTML = `
                          
-                     <img src="http://localhost:3000/images/${img.name}">
+                     <img src="/images/${img.name}">
 
                       <h3 class="text-dark">${img.name}</h3>
                       
@@ -663,7 +659,7 @@
 
 
         async function delete_img(name) {
-            const result = await fetch(`http://localhost:3000/image/delete/${name}`, {
+            const result = await fetch(`/image/delete/${name}`, {
                 method: "DELETE"
             })
 
@@ -677,7 +673,7 @@
                 event.preventDefault()
                 const name = document.getElementById('input_cat_name').value
 
-                const result = await fetch('http://localhost:3000/post/category/add', {
+                const result = await fetch('/post/category/add', {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json',
@@ -699,7 +695,7 @@
                 const name = document.getElementById('input_sub_cat_name').value
                 const category_id = document.getElementById('select_sub_category').value
 
-                const result = await fetch('http://localhost:3000/post/sub/category/add', {
+                const result = await fetch('/post/sub/category/add', {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json',
@@ -718,19 +714,21 @@
 
         async function get_category() {
             categorys = []
-            const result = await fetch('http://localhost:3000/post/get/categorys', {
+            const result = await fetch('/post/get/categorys', {
                 method: "GET",
             })
             categorys = await result.json()
 
             const table = document.getElementById('table')
             const select_sub_category = document.getElementById('select_sub_category')
+
             table.innerHTML = `  <tr>
                             <th class="col">ID</th>
                             <th class="col">نام دسته بندی</th>
                             <th class="col">تاریخ ساخت</th>
                             <th><button onclick="get_category()" class="p-1"><i class="bi bi-arrow-clockwise"></i></button></th>
                         </tr>`
+            select_sub_category.innerHTML = ''
             categorys.forEach(category => {
                 const tr = document.createElement('tr')
                 tr.classList.add('text-dark')
@@ -745,9 +743,11 @@
                 table.appendChild(tr)
 
 
+
                 const option = document.createElement('option')
                 option.value = category.id
                 option.innerText = category.name
+
 
                 select_sub_category.appendChild(option)
 
@@ -757,7 +757,7 @@
 
         async function get_sub_category() {
             sub_category = []
-            const result = await fetch('http://localhost:3000/post/get/sub/categorys', {
+            const result = await fetch('/post/get/sub/categorys', {
                 method: "GET",
             })
             sub_category = await result.json()
@@ -810,7 +810,7 @@
         async function get_logs() {
             logs = []
             all_log_count = document.getElementById('all_log_count')
-            const result = await fetch('http://localhost:3000/log/get', {
+            const result = await fetch('/log/get', {
                 method: "GET"
             })
             const log_results_row = document.getElementById('log_results_row')
@@ -849,7 +849,7 @@
         }
 
         async function delete_log(id) {
-            const result = await fetch(`http://localhost:3000/log/delete/${id}`, {
+            const result = await fetch(`/log/delete/${id}`, {
                 method: "POST"
             })
 

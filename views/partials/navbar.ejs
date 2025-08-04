@@ -83,7 +83,7 @@
     margin-right: 5px;
   }
 
-    .dropdown-menu {
+  .dropdown-menu {
     background-color: #111;
     border-radius: 8px;
     min-width: 200px;
@@ -124,7 +124,7 @@
 <script>
   async function get_category() {
     const dropdown_menu = document.getElementById('dropdown-menu')
-    const result = await fetch('http://localhost:3000/post/get/categorys', {
+    const result = await fetch('/post/get/categorys', {
       method: "GET",
     })
 

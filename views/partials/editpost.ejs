@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -116,83 +117,84 @@
 </head>
 
 <body>
-    <h1>ویرایش پست</h1>
-    <img src="http://localhost:3000/images/<%= post[0].img_path%>" alt="تصویر پست"  id="first_img"/>
+  <h1>ویرایش پست</h1>
+  <img src="/images/<%= post[0].img_path%>" alt="تصویر پست" id="first_img" />
 
-    <form>
-        <label for="title">عنوان</label>
-        <input type="text" value="<%= post[0].title%>" id="title" />
+  <form>
+    <label for="title">عنوان</label>
+    <input type="text" value="<%= post[0].title%>" id="title" />
 
-        <label for="description">توضیحات</label>
-        <textarea id="description"><%= post[0].description%></textarea>
+    <label for="description">توضیحات</label>
+    <textarea id="description"><%= post[0].description%></textarea>
 
-        <label for="more_description">توضیحات بیشتر</label>
-        <textarea id="more_description"><%= post[0].more_description%></textarea>
+    <label for="more_description">توضیحات بیشتر</label>
+    <textarea id="more_description"><%= post[0].more_description%></textarea>
 
-        <label for="category_id">دسته‌بندی</label>
-        <input type="number" value="<%= post[0].category_id%>" id="category_id" />
+    <label for="category_id">دسته‌بندی</label>
+    <input type="number" value="<%= post[0].category_id%>" id="category_id" />
 
-        <label for="sub_category_id">زیر دسته‌بندی</label>
-        <input type="number" value="<%= post[0].sub_category_id%>" id="sub_category_id" />
+    <label for="sub_category_id">زیر دسته‌بندی</label>
+    <input type="number" value="<%= post[0].sub_category_id%>" id="sub_category_id" />
 
-        <label for="img_path">مسیر تصویر</label>
-        <input type="text" value="<%= post[0].img_path%>" id="img_path" />
-        <button type="submit">اپدیت</button>
-    </form>
+    <label for="img_path">مسیر تصویر</label>
+    <input type="text" value="<%= post[0].img_path%>" id="img_path" />
+    <button type="submit">اپدیت</button>
+  </form>
 
-<script>
-  const img_path = document.getElementById('img_path');
-  const first_img = document.getElementById('first_img');
+  <script>
+    const img_path = document.getElementById('img_path');
+    const first_img = document.getElementById('first_img');
 
-  // تغییر داینامیک تصویر
-  img_path.addEventListener('input', (event) => {
-    event.preventDefault();
-    first_img.src = `http://localhost:3000/images/${img_path.value}`;
-  });
+    // تغییر داینامیک تصویر
+    img_path.addEventListener('input', (event) => {
+      event.preventDefault();
+      first_img.src = `/images/${img_path.value}`;
+    });
 
-  // هندل ارسال فرم
-  const form = document.querySelector('form');
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
+    // هندل ارسال فرم
+    const form = document.querySelector('form');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
 
-    // گرفتن مقادیر
-    const title = document.getElementById('title').value;
-    const description = document.getElementById('description').value;
-    const more_description = document.getElementById('more_description').value;
-    const category_id = document.getElementById('category_id').value;
-    const sub_category_id = document.getElementById('sub_category_id').value;
-    const img = img_path.value;
+      // گرفتن مقادیر
+      const title = document.getElementById('title').value;
+      const description = document.getElementById('description').value;
+      const more_description = document.getElementById('more_description').value;
+      const category_id = document.getElementById('category_id').value;
+      const sub_category_id = document.getElementById('sub_category_id').value;
+      const img = img_path.value;
 
-    // ارسال به سرور
-    try {
-      const res = await fetch('http://localhost:3000/post/edit/<%= post[0].id %>', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title,
-          description,
-          more_description,
-          category_id,
-          sub_category_id,
-          img_path: img,
-        }),
-      });
+      // ارسال به سرور
+      try {
+        const res = await fetch('/post/edit/<%= post[0].id %>', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title,
+            description,
+            more_description,
+            category_id,
+            sub_category_id,
+            img_path: img,
+          }),
+        });
 
-      const result = await res.json();
+        const result = await res.json();
 
-      if (res.ok) {
-        alert(result0);
-      } else {
-        alert("خطا در بروزرسانی: " + result.message);
+        if (res.ok) {
+          alert(result0);
+        } else {
+          alert("خطا در بروزرسانی: " + result.message);
+        }
+      } catch (error) {
+        console.error("خطا:", error);
+        alert("ارتباط با سرور برقرار نشد.");
       }
-    } catch (error) {
-      console.error("خطا:", error);
-      alert("ارتباط با سرور برقرار نشد.");
-    }
-  });
-</script>
+    });
+  </script>
 
 </body>
+
 </html>

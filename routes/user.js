@@ -5,8 +5,10 @@ const {
   createRole,
   deleteRole,
   getPrmission,
-  get_user_role,
   get_role_all,
+  getRoleById,
+  getPermissionsByRoleId,
+  updaterole,
 } = require("../controller/user_controller");
 const { authentication , authorization } = require("../middleware/auth");
 const { checkPermission } = require("../middleware/checkPermission");
@@ -123,6 +125,26 @@ router.get('/role/get/all', authentication , async (req , res) => {
   const canAccess = await checkPermission(user.roles,Permissions.VIEW_ROLE);
   if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
    get_role_all(req , res)
+})
+
+router.get('/role/edit/:id', async (req , res) => {
+  const user = await authorization(req);
+  const canAccess = await checkPermission(user.roles,Permissions.EDIT_ROLE);
+  if (!canAccess) return res.status(403).json({ message: "You do not have permission to perform this action" });
+  const role_data = await getRoleById(req.params.id);
+  const getPermissions = await getPermissionsByRoleId(role_data.id);
+  res.render('partials/edit_role', { roleData: role_data, permissions: getPermissions });
+})
+
+router.put('/role/update/:id', async (req, res) => {
+    const user = await authorization(req);
+    const canAccess = await checkPermission(user.roles, Permissions.EDIT_ROLE);
+    if (!canAccess){
+      return res
+        .status(403)
+        .json({ message: "You do not have permission to perform this action" });
+    }
+   updaterole(req , res)
 })
 
 router.get('/logout', (req , res) => {

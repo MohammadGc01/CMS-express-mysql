@@ -20,7 +20,7 @@
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
                         <a href="#" target="_blank" class="">
-                            <img src="http://localhost:3000/images/ads1" alt="تبلیغ ۲" class="img-fluid" />
+                            <img src="/images/ads1" alt="تبلیغ ۲" class="img-fluid" />
                         </a>
                     </div>
                     <div>
@@ -28,12 +28,12 @@
                     </div>
                     <div class="swiper-slide">
                         <a href="#" target="_blank" class="">
-                            <img src="http://localhost:3000/images/ads1" alt="تبلیغ ۲" class="img-fluid" />
+                            <img src="/images/ads1" alt="تبلیغ ۲" class="img-fluid" />
                         </a>
                     </div>
                     <div class="swiper-slide">
                         <a href="#" target="_blank" class="">
-                            <img src="http://localhost:3000/images/ad" alt="تبلیغ ۲" class="img-fluid" />
+                            <img src="/images/ad" alt="تبلیغ ۲" class="img-fluid" />
                         </a>
                     </div>
                 </div>
@@ -47,12 +47,12 @@
         <div class="container mb-5 pb-5 py-5 ">
             <div class="row">
                 <div class="col-9 shadow">
-                      <div class="row p-4" id="post_result"> 
-    
-                      </div>
+                    <div class="row p-4" id="post_result">
+
+                    </div>
                 </div>
                 <div class="col-3 shadow" id="category_result">
-                  
+
                 </div>
             </div>
         </div>
@@ -78,18 +78,18 @@
                 },
             });
 
-async function get_posts() {
-  const res = await fetch('http://localhost:3000/post/get/all');
-  const posts = await res.json();
-  const post_result = document.getElementById('post_result');
+            async function get_posts() {
+                const res = await fetch('/post/get/all');
+                const posts = await res.json();
+                const post_result = document.getElementById('post_result');
 
-  posts.forEach(post => {
-    const time = formatDate(post.create_time);
-    const div = document.createElement('div');
-    div.classList.add('card-post');
+                posts.forEach(post => {
+                    const time = formatDate(post.create_time);
+                    const div = document.createElement('div');
+                    div.classList.add('card-post');
 
-    div.innerHTML = `
-      <img src="http://localhost:3000/images/${post.img_path}" alt="${post.title}">
+                    div.innerHTML = `
+      <img src="/images/${post.img_path}" alt="${post.title}">
       <h4>${post.title}</h4>
       <p>${post.description}</p>
       <span>${post.views} بازدید</span>
@@ -97,63 +97,63 @@ async function get_posts() {
       <hr>
       <a href="#">ادامه مطالب</a>
     `;
-    post_result.appendChild(div);
-  });
-}
+                    post_result.appendChild(div);
+                });
+            }
 
-function formatDate(dateStr) {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString('fa-IR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-}
+            function formatDate(dateStr) {
+                const date = new Date(dateStr);
+                return date.toLocaleDateString('fa-IR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
 
-get_posts();
+            get_posts();
 
 
 
-        async function get_category() {
-             const result_cat = await fetch("http://localhost:3000/post/get/categorys", {
-                method : "GET"
-             })
+            async function get_category() {
+                const result_cat = await fetch("/post/get/categorys", {
+                    method: "GET"
+                })
 
-             const data_cat = await result_cat.json()
+                const data_cat = await result_cat.json()
 
-             const result_sub_cat = await fetch("http://localhost:3000/post/get/sub/categorys", {
-                method : "GET"
-             })
+                const result_sub_cat = await fetch("/post/get/sub/categorys", {
+                    method: "GET"
+                })
 
-             const data_sub_cat = await result_sub_cat.json()
+                const data_sub_cat = await result_sub_cat.json()
 
- 
+
                 const category_result = document.getElementById('category_result')
 
-             data_cat.forEach(cat => {
-                const ul = document.createElement('ul')
-                ul.classList.add('DropDown', 'shadow',)
-                ul.innerHTML = `
+                data_cat.forEach(cat => {
+                    const ul = document.createElement('ul')
+                    ul.classList.add('DropDown', 'shadow',)
+                    ul.innerHTML = `
                         ${cat.name}
                 `
 
-                const lis = data_sub_cat.filter(sub => sub.category_id == cat.id )
-                lis.forEach(sub => {
-                    const li = document.createElement('li')
-                    li.classList.add('my-3')
-                    ul.appendChild(li)
-                    li.innerHTML = `
+                    const lis = data_sub_cat.filter(sub => sub.category_id == cat.id)
+                    lis.forEach(sub => {
+                        const li = document.createElement('li')
+                        li.classList.add('my-3')
+                        ul.appendChild(li)
+                        li.innerHTML = `
                     <a href="#">${sub.name}</a>
                     `
-                })                
+                    })
 
-                category_result.appendChild(ul)
-             })
-             
-             
-        }
+                    category_result.appendChild(ul)
+                })
 
-        get_category()
+
+            }
+
+            get_category()
         </script>
 </body>
 

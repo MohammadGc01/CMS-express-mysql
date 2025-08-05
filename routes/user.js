@@ -52,7 +52,7 @@ router.post('/upload/images', authentication,  upload.single('myfile'), (req, re
   res.json({
     message: 'آپلود با موفقیت انجام شد',
     filename: req.file.filename,
-    url: `/uploads/${req.file.filename}`
+    url: `/images/${req.file.filename}`
   });
 });
 // upload profile

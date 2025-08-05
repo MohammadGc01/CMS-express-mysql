@@ -62,7 +62,7 @@ router.post('/upload/images', authentication, upload.single('myfile'), async (re
     res.json({
       message: 'آپلود با موفقیت انجام شد',
       filename: req.file.filename,
-      url: `/uploads/${req.file.filename}`
+      url: `/images/${req.file.filename}`
     });
   });
 });

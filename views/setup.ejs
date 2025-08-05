@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>تنظیمات اولیه</title>
+    <style>
+    input, label {
+        padding: 5px;
+        margin-top: 50px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container w-50 p-5">
+        <form action="/setup" method="post">
+            <h2>اطلاعات دیتا بیس</h2>
+            <label for="db_host">نام هاست </label>
+            <input type="text" name="db_host">
+            <label for="db_user"> نام کاربری </label>
+            <input type="text" name="db_user">
+            <label for="db_pass">پسورد</label>
+            <input type="text" name="db_pass">
+            <label for="db_name">نام پایگاه داده</label>
+            <input type="text" name="db_name">
+        <br><br>
+
+            <h2>سشن کی</h2>
+            <label for="session_key">نام کیلید سشن</label>
+            <input type="text" name="session_key">
+        <br><br>
+
+            <h2>اطلاعات حساب کاربری</h2>
+            <label for="email">ایمیل</label>
+            <input type="text" name="email">
+            <label for="password">رمز عبور </label>
+            <input type="text" name="password">
+
+            <button type="submit" class="btn btn-outline-primary">ارسال</button>
+        </form>
+    </div>
+</body>
+
+</html>

@@ -163,13 +163,19 @@ async function deleteRole(req, res) {
   const id = req.params.role_id
   if(!id) return res.json({message : "شما پارامتر ایدی را وارد نکردید"})
   
-  db.query("DELETE FROM roles WHERE id = ?", [id], (err , result) => {
+  db.query("DELETE FROM roles WHERE id = ?", [id], async (err , result) => {
     if(err){
       return res.json({
         message : "موقع حذف رول مشکلی به وجود امد دوباره امتحان کنید"
       })
     }
-     res.json({message : `رول ${id} با موفقیت حذف شد`})
+    const remove_role = await removeRole('role_id' , id)
+    res.json(`
+      رول با موفقیت حذف شد و
+      از کاربران 
+      گرفته شد
+      متن خوده سیستم : ${removeRole}
+      `)
   })
 }
 
@@ -252,17 +258,20 @@ async function addRole(req, res) {
   });
 }
 
-async function removeRole(req , res) {
-  const id = req.params.user_id
- if(!id){
-  return res.json({message : "شما پارامتر ایدی را وارد نکردید"})
+async function removeRole(fieldname , value) {
+ if(!fieldname){
+  return res.json("فیلد انتخابی را وارد نکردید")
  }  
- 
- db.query("DELETE FROM user_role WHERE user_id", [id], async (err , result) => {
-   if(err) return res.json({message : "موقع گرفتن رول کاربر مشکلی پیش اومد"})
-    res.json({message : "رول کاربر گرفته شد"})  
+ if(!value){
+  return res.json("مقدار انتخابی را وارد نکردید")
+  }
+  return new Promise((resolve , reject) => { 
+ db.query(`DELETE FROM user_role WHERE ${fieldname}`, [value], async (err , result) => {
+   if(err) return reject(err);
+    return resolve("ROLE REMOVE SUCCESSFULL");
  })
 
+  })
 }
 
 async function getPrmission(roles) {

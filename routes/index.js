@@ -7,7 +7,23 @@ const { get_logs, delete_log, download_log } = require("../controller/log_contro
 const { checkPermission } = require("../middleware/checkPermission");
 
 router.get('/', (req, res) => {
-  res.render('home')
+ 
+  db.query('SELECT * FROM setting WHERE 1', (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error retrieving settings');
+    }
+    req.session.setting = {
+      cms_name: result[0].cms_name,
+      cms_logo: result[0].cms_logo,
+      cms_mailler_service: result[0].cms_mailler_service,
+      cms_mailler_user: result[0].cms_mailler_user,
+      cms_mailler_pass: result[0].cms_mailler_pass
+    }
+    
+      res.render("home", { setting: req.session.setting });
+  })
+
 })
 
 
@@ -122,5 +138,6 @@ router.get('/log/download/all', authentication, async (req, res) => {
 
   download_log(req, res)
 })
+
 
 module.exports = router

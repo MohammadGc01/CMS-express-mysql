@@ -1,7 +1,14 @@
 # modscape
 
+make .env file based on .env.example file
 
-MaillerService=Zoho
-MaillerUser=info@modscape.ir
-MaillerPass=19GPS7e4e2GW
+    SESSION_SECRET=
+    DB_HOST=
+    DB_USER=
+    DB_PASS=
+    DB_NAME=
 
+```bash
+npm install
+npm start
+```

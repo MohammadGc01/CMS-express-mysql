@@ -28,7 +28,7 @@ async function create_contact(req, res) {
         وضعیت ثبت‌نامی: ${isRegistered ? "ثبت‌نام شده" : "ثبت‌نام نشده"}
       `;
 
-      const mail = new mailler(email, "ثبت تماس ماد اسکیپ", emailBody);
+      const mail = new mailler(email, "تماس جدید ثبت شد", "فرم شما ثبت شد و در اولین فرصت بررسی خواهد شد");
       await mail.send();
       res.json({
         success: true,

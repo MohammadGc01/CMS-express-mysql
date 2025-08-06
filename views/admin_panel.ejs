@@ -197,6 +197,11 @@
                                                         </li>
                                                         <%}%>
 
+                                                        <% if(permissions.includes('SITE_SETTING') || permissions.includes('ADMINISTRATOR')){ %>
+                                                            <li onclick="selectSec('setting_template')"> <i class="bi bi-gear"></i>   تنظیمات سایت
+                                                            </li>
+                                                            <%}%>
+
                 </ul>
 
                 <ul>
@@ -403,6 +408,12 @@
                         </tr>
                     </table>
                 </div>
+            </template>
+            <template id="setting_template">
+                  <div class="container p-5 text-dark">
+                    <h2>تنظیمات</h2>
+
+                  </div>
             </template>
         </div>
     </div>

@@ -4,7 +4,7 @@ const router = require("express").Router();
 
 
 router.get('/', (req , res) => {
-   res.render('contactus')
+   res.render("contactus", { setting: req.session.setting });
 })
 
 router.post('/create', async (req , res) => {

@@ -1,18 +1,31 @@
 const nodemailer = require("nodemailer");
 const logger = require("../services/logger");
+const db = require("../database/connection");
 require("dotenv").config();
 
 async function send_email(to, subject, text) {
+ const result = await new Promise((resolve, reject) => {
+   db.query(
+     "SELECT cms_mailler_service, cms_mailler_user, cms_mailler_pass FROM setting WHERE 1",
+     (err, result) => {
+       if (err) reject(err);
+       else resolve(result);
+     }
+   );
+ });
+
+ const { cms_mailler_service, cms_mailler_user, cms_mailler_pass } = result[0];
+  
   const transporter = nodemailer.createTransport({
-    service: process.env.MaillerService,
+    service: cms_mailler_service,
     auth: {
-      user: process.env.MaillerUser,
-      pass: process.env.MaillerPass,
+      user: cms_mailler_user,
+      pass: cms_mailler_pass,
     },
   });
 
   const mailOption = {
-    from: process.env.MaillerUser,
+    from: cms_mailler_user,
     to: `${to}`,
     subject: `${subject}`,
     text: `${text}`,

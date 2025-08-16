@@ -7,6 +7,7 @@ const Permission = {
   DELETE_ROLE: "DELETE_ROLE",
   ADD_ROLE: "ADD_ROLE",
   REMOVE_ROLE: "REMOVE_ROLE",
+  EDIT_ROLE: "EDIT_ROLE",
 
   VIEW_LOGS: "VIEW_LOGS",
 

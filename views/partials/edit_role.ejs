@@ -14,45 +14,81 @@
     <h1 class="text-center mb-4">ویرایش رول</h1>
     <div class="row justify-content-center">
       <div class="col-md-6">
-        <form id="editRoleForm">
-          <div class="mb-3">
-            <label for="roleName" class="form-label">نام رول</label>
-            <input type="text" class="form-control" id="roleName" value="<%= roleData.name %>" required>
-          </div>
-          <button type="submit" class="btn btn-success w-100">آپدیت</button>
-        </form>
+
+        <div class="mb-3">
+          <label for="roleName" class="form-label">نام رول</label>
+          <input type="text" class="form-control" id="roleName" value="<%= roleData.name %>" required>
+        </div>
+        <div class="mb-3">
+          <label for="roleName" class="form-label">برای تنظیم به عنوان رول دیفالت عدد 1 رو وارد کنید د غیر این صورت
+            0</label>
+          <input type="text" class="form-control" id="set_defualt_role" value="<%= roleData.set_defualt_role %>"
+            required>
+        </div>
+        <button type="submit" class="btn btn-success w-100" onclick="updaterole()">آپدیت</button>
+
+        <div class="py-5 pb-5">
+          <input type="text" class="form-control" value="نام سطح دسترسی" id="permName">
+          <button class="btn btn-success w-100" onclick="addperm()">اضافه کردن</button>
+        </div>
       </div>
     </div>
+    <% permissions.forEach(perm => {%>
+    <div class="row justify-content-around">
+          <div>
+             ایدی : <%= perm.id%> 
+          </div>
+
+          <div>
+            اسم پرمیشن : <%= perm.permission_name%>
+          </div>
+    </div>
+    <%})%>
   </div>
 
   <script>
-    const form = document.getElementById('editRoleForm');
-
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
-
+    async function updaterole() {
       const roleName = document.getElementById('roleName').value;
+      const set_defualt_role = document.getElementById('set_defualt_role').value;
 
-        const response = await fetch(`/user/role/update/<%= roleData.id %>`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            name: roleName
-          })
-        });
+      const response = await fetch("/user/role/update/<%= roleData.id%>", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: roleName,
+          set_defualt_role: set_defualt_role
+        })
+      })
 
-        const result = await response.json();
+      const data = await response.json()
+      alert(data)
 
-        if (response.ok) {
-          alert(result.message);
-          window.location.href = "/user/panel";
-        } else {
-          alert("خطا: " + result.message);
-        }
+    }
+    async function addperm(id) {
+      const permName = document.getElementById('permName').value;
 
-    });
+      const response = await fetch(`/user/role/add/perm`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          permname: permName,
+          role_id: "<%= roleData.id %>"
+        })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(result);
+        window.location.href = "/user/panel";
+      } else {
+        alert("خطا: " + result);
+      }
+    }
   </script>
 </body>
 

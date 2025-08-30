@@ -2,6 +2,7 @@ const db = require("../database/connection");
 const bcrypt = require("bcrypt");
 const logger = require("../services/logger");
 const mailler = require("../services/mailler");
+const database = require("../database/database");
 require("dotenv").config();
 
 async function RegisterUser(req, res) {
@@ -25,57 +26,47 @@ async function RegisterUser(req, res) {
 
   const sql = `INSERT INTO users(username, email, password) VALUES (?, ?, ?)`;
 
-  db.query(
-    sql,
-    [username, email, hashPassword, "user"],
-    async (err, result) => {
-      if (err) {
-        const log = new logger(
-          `ثبت نام ناموفق :  ${err.name} `,
-          `موقع query زدن برای ثبت نام مشکلی به وجود اومد پیام خطا : ${err.message}`,
-          "error",
-          req.ip
-        );
-        await log.save();
-        return res.status(500).send("ثبت‌ نام با مشکل مواجه شد");
-      }
-
-      const role_id = await new Promise((resolve, reject) => {
-        db.query(
-          "SELECT * FROM roles WHERE set_defualt_role = 1",
-          (role_err, role_result) => {
-            if (role_err) return reject(role_err);
-            resolve(role_result[0].id);
-          }
-        );
-      });
-      const user_id = result.insertId;
-
-      const sql2 = `INSERT INTO user_role(user_id, role_id) VALUES (?, ?)`;
-      const role_insert_result = await new Promise((resolve, reject) => {
-        db.query(sql2, [user_id, role_id], (insertErr, insertResult) => {
-          if (insertErr) return reject(insertErr);
-          resolve(insertResult);
-        });
-      });
-
+  db.query(sql, [username, email, hashPassword], async (err, result) => {
+    if (err) {
       const log = new logger(
-        "ثبت نام",
-        `کاربری با ایمیل : ${email} و نام کاربری :  ${username} ثبت نام کرد`,
-        "success",
+        `ثبت نام ناموفق :  ${err.name} `,
+        `موقع query زدن برای ثبت نام مشکلی به وجود اومد پیام خطا : ${err.message}`,
+        "error",
         req.ip
       );
       await log.save();
-
-      const mail = new mailler(email, `ثبت نام`, `ثبت نام شما موفقیت انجام شد`);
-      await mail.send();
-
-      res.json({
-        success: true,
-        message: "ثبت‌نام با موفقیت انجام شد",
-      });
+      return res.status(500).send("ثبت‌ نام با مشکل مواجه شد");
     }
-  );
+
+    const DataBase = new database("roles", "*", "set_defualt_role", 1, false);
+    const role_id = await DataBase.SELECT();
+
+    const user_id = result.insertId;
+
+    const sql2 = `INSERT INTO user_role(user_id, role_id) VALUES (?, ?)`;
+    const role_insert_result = await new Promise((resolve, reject) => {
+      db.query(sql2, [user_id, role_id.result[0].id], (insertErr, insertResult) => {
+        if (insertErr) return reject(insertErr);
+        resolve(insertResult);
+      });
+    });
+
+    const log = new logger(
+      "ثبت نام",
+      `کاربری با ایمیل : ${email} و نام کاربری :  ${username} ثبت نام کرد`,
+      "success",
+      req.ip
+    );
+    await log.save();
+
+    const mail = new mailler(email, `ثبت نام`, `ثبت نام شما موفقیت انجام شد`);
+    await mail.send();
+
+    res.json({
+      success: true,
+      message: "ثبت‌نام با موفقیت انجام شد",
+    });
+  });
 }
 
 async function LoginUser(req, res) {
@@ -384,8 +375,6 @@ async function getPermissionsByRoleId(role_id) {
 }
 
 async function updaterole(req, res) {
-  console.log(req.body);
-  
   const id = req.params.id;
   const name = req.body.name;
   const set_defualt_role = req.body.set_defualt_role;
@@ -414,6 +403,77 @@ async function add_perm_role(req, res) {
   );
 }
 
+async function forgot_pass(req, res) {
+  const { email } = req.body;
+  if (!email) return res.json("ایمیلی وارد نکردید");
+
+  const CheckEmail = await new Promise((resolve, reject) => {
+    db.query(
+      "SELECT email FROM users WHERE email = ?",
+      email,
+      (err, result) => {
+        if (err) return reject(err);
+        return resolve(result);
+      }
+    );
+  });
+
+  if (!CheckEmail[0]) {
+    return res.json("حساب کاربری با این ایمیل پیدا نشد");
+  } else {
+    const token = await bcrypt.hash(email, 10);
+    const sql =
+      "INSERT INTO forgot_pass_token(ForEmail , token , IsUsed) VALUES(?,?)";
+    db.query(sql, [email, token, "false"], async (err, result) => {
+      if (err) return res.json(`مشکلی پیش اومد دوباره امتحان کنید`);
+      const Mailler = new mailler(
+        email,
+        "فراموشی رمز عبور",
+        `درود کاربر عزیز برای تغییر رمز عبور حساب خود روی لینک زیر کیلیک کنید
+        <a href="http://localhost:3000/user/change-pass/${token}"> کلیک کنید </a>
+      `
+      );
+      await Mailler.send();
+      res.status(200).json("لینک عوض کردن رمز عبور برای شما ارسال شد");
+    });
+  }
+}
+
+async function change_pass(req, res) {
+  const { token } = req.params;
+  const { new_password } = req.body;
+
+  if (!token) return res.json("توکن را وارد نکردید");
+  if (!new_password) return res.json("پسورد جدید را وارد نکردید");
+
+  const tokenData = await new Promise((resolve, reject) => {
+    db.query(
+      "SELECT * FROM forgot_pass_token WHERE token = ? AND IsUsed = 'false'",
+      [token],
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result[0]);
+      }
+    );
+  });
+
+  if (!tokenData) {
+    return res.json("توکن نامعتبر یا منقضی شده است");
+  } else if (tokenData.IsUsed === "true") {
+    return res.json("این توکن قبلا استفاده شده است یکبار دیگر درخواست دهید");
+  } else {
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+    db.query(
+      "UPDATE users SET password = ? WHERE email = ?",
+      [hashedPassword, tokenData.ForEmail],
+      (err, result) => {
+        if (err) return res.json(err);
+        res.json(result);
+      }
+    );
+  }
+}
+
 module.exports = {
   RegisterUser,
   LoginUser,
@@ -428,4 +488,6 @@ module.exports = {
   getPermissionsByRoleId,
   updaterole,
   add_perm_role,
+  forgot_pass,
+  change_pass,
 };

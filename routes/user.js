@@ -11,6 +11,8 @@ const {
   updaterole,
   removeRole,
   add_perm_role,
+  forgot_pass,
+  change_pass,
 } = require("../controller/user_controller");
 const { authentication , authorization } = require("../middleware/auth");
 const { checkPermission } = require("../middleware/checkPermission");
@@ -155,6 +157,10 @@ router.put('/role/update/:id', authentication , async (req, res) => {
    updaterole(req , res)
 
 })
+
+router.post("/forgot-password", forgot_pass)
+
+router.post("/change-pass/:token", change_pass);
 
 router.get('/logout', (req , res) => {
   req.session.destroy()

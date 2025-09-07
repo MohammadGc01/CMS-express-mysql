@@ -474,6 +474,11 @@ async function change_pass(req, res) {
   }
 }
 
+async function get_all_users() {
+  const DB = new database("users", "username, email , create_time", false , false , false)
+  return await DB.SELECT()
+}
+
 module.exports = {
   RegisterUser,
   LoginUser,
@@ -490,4 +495,5 @@ module.exports = {
   add_perm_role,
   forgot_pass,
   change_pass,
+  get_all_users
 };

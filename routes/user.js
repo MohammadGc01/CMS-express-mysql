@@ -13,6 +13,7 @@ const {
   add_perm_role,
   forgot_pass,
   change_pass,
+  get_all_users,
 } = require("../controller/user_controller");
 const { authentication , authorization } = require("../middleware/auth");
 const { checkPermission } = require("../middleware/checkPermission");
@@ -85,13 +86,9 @@ router.get('/panel', authentication, async (req , res) => {
   res.render('user_panel', {user : req.session.user})
 })
 
-router.post("/login", (req, res) => {
-  LoginUser(req, res);
-});
+router.post("/login", LoginUser);
 
-router.post("/register", (req, res) => {
-  RegisterUser(req, res);
-});
+router.post("/register",RegisterUser);
 
 
 router.post("/role/create", authentication, async (req, res) => {
@@ -161,6 +158,18 @@ router.put('/role/update/:id', authentication , async (req, res) => {
 router.post("/forgot-password", forgot_pass)
 
 router.post("/change-pass/:token", change_pass);
+
+router.get('/get/all', authentication , async (req , res) => {
+   const user = await authorization(req);
+    const canAccess = await checkPermission(user.roles, Permissions.ADMINISTRATOR);
+    if (!canAccess){
+      return res
+        .status(403)
+        .json({ message: "You do not have permission to perform this action" });
+    }
+    const users = await get_all_users()
+    res.json(users)
+})
 
 router.get('/logout', (req , res) => {
   req.session.destroy()

@@ -1,0 +1,242 @@
+<template id="log_template">
+    <div class="container py-5">
+        <h2 class="text-dark mb-4">لاگ‌ها</h2>
+
+        <!-- نوبار فیلتر و جستجو -->
+        <nav class="navbar fixed-top bg-light rounded shadow-sm px-3 mb-4">
+            <div class="container-fluid flex-wrap justify-content-between">
+
+                <div id="all_log_count" class="text-dark">تعداد کلی : </div>
+                <!-- فیلتر و رفرش -->
+                <div class="d-flex gap-4 align-items-center">
+                    <select class="form-select" onclick="filter_log(this.value)">
+                        <option value="all">همه</option>
+                        <option value="success">موفق</option>
+                        <option value="info">اطلاعات</option>
+                        <option value="warn">هشدار</option>
+                        <option value="error">خطا</option>
+                    </select>
+                    <button class="btn btn-outline-primary" id="log_refresh_btn" onclick=" get_logs()">
+                        <i class="bi bi-arrow-clockwise"></i> رفرش
+                    </button>
+                    <button class="btn btn-outline-primary">
+                        <a class="nav-link" href="/log/download/all">خروجی JSON</a>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+
+
+        <!-- ردیف نمایش لاگ‌ها -->
+        <div class="row" id="log_results_row">
+
+        </div>
+    </div>
+</template>
+
+<template id="category_template">
+    <div class="container p-5 text-dark">
+        <form id="add_cat" class="d-flex">
+            <input type="text" name="" id="input_cat_name" class="form-control w-25 me-2">
+            <button type="submit" class="btn btn-success">ذخیره</button>
+        </form>
+    </div>
+    <div class="container p-5">
+        <table class="table" id="table">
+            <tr>
+                <th class="col">ID</th>
+                <th class="col">نام دسته بندی</th>
+                <th class="col">تاریخ ساخت</th>
+                <th><button onclick="get_category()" class="p-1"><i class="bi bi-arrow-clockwise"></i></button></th>
+            </tr>
+        </table>
+    </div>
+
+
+
+    <div class="container p-5 text-dark">
+        <form id="add_sub_cat" class="d-flex">
+            <input type="text" name="" id="input_sub_cat_name" class="form-control w-25 me-2">
+            <select id="select_sub_category" class="me-2">
+
+            </select>
+            <button type="submit" class="btn btn-success">ذخیره</button>
+        </form>
+    </div>
+    <div class="container p-5">
+        <table class="table" id="table2">
+            <tr>
+                <th class="col">ID</th>
+                <th class="col">نام زیر دسته بندی</th>
+                <th class="col">تاریخ ساخت</th>
+                <th class="col"> ایدی دسته بندی اصلی</th>
+                <th><button onclick="get_sub_category()" class="p-1"><i class="bi bi-arrow-clockwise"></i></button></th>
+            </tr>
+        </table>
+    </div>
+</template>
+
+<template id="post_template">
+    <div class="container p-5 d-flex">
+        <div class="row p-2">
+            <div class="col-2">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">
+                    <i class="bi bi-plus-square"></i> پست جدید
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="p-4 border rounded" style="max-width: 600px; margin: auto;"
+                                    id="form_create_post">
+                                    <div class="mb-3">
+                                        <label for="title" class="form-label">عنوان</label>
+                                        <input type="text" class="form-control" id="title" name="title"
+                                            placeholder="عنوان را وارد کنید" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">توضیحات</label>
+                                        <textarea class="form-control" id="description" name="description" rows="4"
+                                            placeholder="متن توضیحات"></textarea>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="more_description" class="form-label">توضیحات
+                                            بیشتر</label>
+                                        <textarea class="form-control" id="more_description" name="more_description"
+                                            rows="4" placeholder="توضیحات بیشتر"></textarea>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="category_id" class="form-label">شناسه دسته‌بندی</label>
+                                        <input type="number" class="form-control" id="category_id" name="category_id"
+                                            placeholder="شماره دسته‌بندی" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="sub_category_id" class="form-label">شناسه زیر
+                                            دسته</label>
+                                        <input type="number" class="form-control" id="sub_category_id"
+                                            name="sub_category_id" placeholder="شماره زیر دسته" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="img_path" class="form-label">نام تصویر (بدون
+                                            فایل)</label>
+                                        <input type="text" class="form-control" id="img_path" name="img_path"
+                                            placeholder="نام تصویر" required>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary w-100">ارسال</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row p-4" id="post_result">
+
+        </div>
+    </div>
+</template>
+
+<template id="Images_template">
+    <div class="container d-flex p-5 text-dark">
+        <h5 class="me-5">عکس ها</h5>
+        <form id="Update_img_form">
+            <input type="file" name="myfile" id="file_img" required>
+
+            <button type="submit">آپلود</button>
+        </form>
+    </div>
+    <div id="images" class="row">
+    </div>
+</template>
+<template id="roles_template">
+    <div class="container p-5">
+        <h5 class="me-5">نقش ها</h5>
+        <input type="text" name="role_name" id="role_name" placeholder="نام نقش" required>
+        <button type="submit" onclick="create_role()">اضافه کردن نقش</button>
+    </div>
+    <div class="container p-5">
+        <table class="table text-dark" id="table">
+            <tr>
+                <th class="col">ID</th>
+                <th class="col">نام نقش</th>
+                <th class="col">تاریخ ساخت</th>
+                <th class="col">عملیات</th>
+                <th class="col btn btn-outline-primary" onclick="get_roles()">refresh</th>
+            </tr>
+        </table>
+    </div>
+</template>
+<template id="setting_template">
+    <div class="container p-5 text-dark">
+   
+        <button onclick="loadSettingElement()">لود المنت ها</button>
+        <button onclick="get_site_setting()">رفرش</button>
+        <h2>تنظیمات</h2>
+
+        <label for="cms_name">cms_name</label>
+        <input type="text" id="cms_name" value=".">
+
+        <label for="cms_logo">cms_logo</label>
+        <input type="text" id="cms_logo">
+
+        <hr> 
+<label for="cms_mailler_service">نام سرویس ایمیل</label>
+<input type="text" id="cms_mailler_service">
+
+<label for="cms_mailler_user">نام  کاربری سرویس  ایمیل </label>
+<input type="text" id="cms_mailler_user">
+
+<label for="cms_mailler_pass">رمز عبور سرویس ایمیل</label>
+<input type="password" id="cms_mailler_pass">
+
+<hr>
+
+<label for="ShowAds"> نمایش تبلیغات برای نمایش 1 برا نمایش ندادن 0   </label>
+<input type="number" id="ShowAds">
+
+        
+<button class="btn btn-outline-success">ذخیره</button>
+    </div>
+    
+</template>
+
+<template id="users_template">
+
+ <div class="container p-5">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">پروفایل</th>
+                <th scope="col">شناسه کاربر</th>
+                <th scope="col">نام کاربری</th>
+                <th scope="col">ایمیل</th>
+                <th scope="col">عملیات </th>
+            </tr>
+        </thead>
+        <tbody id="users_tb">
+    
+        </tbody>
+    </table>
+ </div>
+</template>

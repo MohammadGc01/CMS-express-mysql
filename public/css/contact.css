@@ -1,0 +1,47 @@
+@font-face {
+  font-family: "vazir";
+  src: url("/css/Vazir-Bold.ttf");
+}
+
+body {
+  background-color: #121212;
+  color: white;
+  font-family: "vazir";
+}
+
+.form-control,
+.form-control:focus {
+  background-color: #1e1e1e;
+  color: white;
+  border-color: #3fc1c9;
+}
+
+.form-label {
+  color: #e0e0e0;
+}
+
+.form-control::placeholder {
+  color: white;
+}
+
+.btn-custom {
+  background-color: #3fc1c9;
+  color: black;
+  font-weight: bold;
+}
+
+.btn-custom:hover {
+  background-color: #28a2a8;
+  color: white;
+}
+
+.contact-box {
+  background-color: #1c1c1c;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(63, 193, 201, 0.3);
+}
+
+h2 {
+  color: aquamarine;
+}

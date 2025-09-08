@@ -1,6 +1,7 @@
 const db = require("../database/connection");
 const path = require('path')
 const fs = require('fs');
+const database = require("../database/database");
 
 function save_to_database(title,message, level , ip) {
  const time = new Date().getTime()
@@ -16,15 +17,11 @@ function save_to_database(title,message, level , ip) {
     })
 }
 
-function get_logs(req , res) {
-    const sql = "SELECT * FROM logs"
-    db.query(sql, (err, result) => {
-        if (err) {
-            console.log("get log from db have error => " + err.message)
-            return
-        }
-        res.json(result)
-    })
+async function get_logs(req , res) {
+    const db = new database("logs", "*", false, false, false)
+    const data = await db.SELECT()
+    if (data.success == false) return console.log(data.error.message);
+    res.json(data.result)
 }
 
 function delete_log(req , res) {
@@ -39,18 +36,15 @@ function delete_log(req , res) {
 }
 
 
-function download_log(req, res) {
-     db.query("SELECT * FROM logs", (err, result) => {
-    if (err) {
-      console.error("DB Error:", err.message);
-      return res.status(500).send("خطا در دریافت اطلاعات");
-    }
+async function download_log(req, res) {
+    const db = new database("logs", "*", false, false, false)
+    const result = await db.SELECT()
+    if (result.success == false) return console.log(result.error.message);
 
     const json = JSON.stringify(result, null, 2);
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Content-Disposition', 'attachment; filename="logs.json"');
     res.send(json);
-  });
 }
 
 

@@ -5,6 +5,42 @@ let all_log_count = 0;
 let images = [];
 let roles = [];
 
+
+  var cms_name = null
+  var cms_logo = null
+ var  cms_mailler_service = null
+ var  cms_mailler_user = null
+ var  cms_mailler_pass = null
+var ShowAds = null;
+ 
+async function loadSettingElement() {
+    cms_name = document.getElementById("cms_name");
+    cms_logo = document.getElementById("cms_logo");
+    cms_mailler_service = document.getElementById("cms_mailler_service");
+    cms_mailler_user = document.getElementById("cms_mailler_user");
+    cms_mailler_pass = document.getElementById("cms_mailler_pass");
+    ShowAds = document.getElementById("ShowAds");
+}
+
+async function get_site_setting() {
+  const response = await fetch("/get/site/setting", {
+    method : "GET",
+  });
+  const result = await response.json()
+
+  cms_name.value = result.result[0].cms_name;
+    
+  cms_logo.value = result.result[0].cms_logo;
+
+  cms_mailler_service.value = result.result[0].cms_mailler_service;
+  
+  cms_mailler_user.value = result.result[0].cms_mailler_user;
+
+  cms_mailler_pass.value = result.result[0].cms_mailler_pass;
+  ShowAds.value = result.result[0].ShowAds;
+
+}
+
 async function delete_role(id) {
   Swal.fire({
     title: "Are you sure?",
@@ -283,6 +319,18 @@ function add_sub_cat() {
     });
 }
 
+async function delete_category(IsSub, id) {
+  var url = ``;
+  if (IsSub) url = `/post/delete/sub_category/${id}`;
+  if (!IsSub) url = `/post/delete/category/${id}`;
+  const response = await fetch(url, {
+   method : "POST"
+  });
+
+  const result = await response.json()
+  alert(result)
+}
+
 async function get_category() {
   categorys = [];
   const result = await fetch("/post/get/categorys", {
@@ -309,6 +357,8 @@ async function get_category() {
                  <th scope="row">${category.id}</th>
       <td>${category.name}</td>
       <td>${category.create_time}</td>
+      <td><button type="submit" class="btn btn-outline-danger my-4" onclick="delete_category(false , ${category.id})">حذف</button></td>
+
 
       `;
     table.appendChild(tr);
@@ -347,6 +397,7 @@ async function get_sub_category() {
       <td>${category.name}</td>
       <td>${category.create_time}</td>
       <td>${category.category_id}</td>
+      <td><button type="submit" class="btn btn-outline-danger my-4" onclick="delete_category(true , ${category.id})">حذف</button></td>
 
 
       `;
@@ -370,6 +421,10 @@ function selectSec(sectionid) {
     create_post();
     get_posts();
   }
+  if (sectionid === "users_template") {
+    get_users();
+  }
+
 }
 async function get_logs() {
   logs = [];
@@ -426,4 +481,28 @@ async function delete_log(id) {
 
   const data = await result.json();
   alert(data);
+}
+
+async function get_users() {
+  const result = await fetch(`/user/get/all`, {
+    method: "GET",
+  });
+
+  const users = await result.json();
+
+  const users_tb = document.getElementById("users_tb");
+  users_tb.innerHTML = ``;
+
+  users.result .forEach((user) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+     <td><img src="/images/${user.email}" width="60" height="60" class="rounded-5"></td>
+      <td>${user.id}</td>
+      <td>${user.username}</td>
+      <td>${user.email}</td>
+      <td><a class="btn btn-outline-warning" href="/user/get/${user.id}"> ویرایش</a></td>
+
+    `;
+    users_tb.appendChild(tr);
+  });
 }

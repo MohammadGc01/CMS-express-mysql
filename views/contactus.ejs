@@ -1,65 +1,7 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<%- include('partials/header') %>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تماس با ما</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-  <link rel="shortcut icon" href="/images/<%= setting.cms_logo%>" type="image/x-icon">
-  <style>
-    @font-face {
-      font-family: 'vazir';
-      src: url('/css/Vazir-Bold.ttf');
-    }
 
-    body {
-      background-color: #121212;
-      color: white;
-      font-family: 'vazir';
-    }
 
-    .form-control,
-    .form-control:focus {
-      background-color: #1e1e1e;
-      color: white;
-      border-color: #3fc1c9;
-    }
-
-    .form-label {
-      color: #e0e0e0;
-    }
-
-    .form-control::placeholder {
-      color: white;
-    }
-
-    .btn-custom {
-      background-color: #3fc1c9;
-      color: black;
-      font-weight: bold;
-    }
-
-    .btn-custom:hover {
-      background-color: #28a2a8;
-      color: white;
-    }
-
-    .contact-box {
-      background-color: #1c1c1c;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(63, 193, 201, 0.3);
-    }
-
-    h2 {
-      color: aquamarine;
-    }
-  </style>
-</head>
-
-<body>
   <%- include('partials/navbar') %>
 
     <div class="container py-5">

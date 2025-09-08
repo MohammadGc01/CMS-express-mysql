@@ -34,19 +34,24 @@
       </div>
     </div>
     <% permissions.forEach(perm => {%>
-    <div class="row justify-content-around">
-          <div>
-             ایدی : <%= perm.id%> 
-          </div>
 
-          <div>
-            اسم پرمیشن : <%= perm.permission_name%>
-          </div>
-    </div>
+      <button type="button" class="btn btn-outline-danger" onclick="deleteperm(<%= perm.id%> )"><%= perm.permission_name%></button>
+    
     <%})%>
   </div>
 
   <script>
+    async function deleteperm(id) {
+      const response = await fetch(`/user/role/remove/perm/${id}`, {
+        method : "POST"
+      })
+
+      const result = await response.json()
+      if(result.success == false){
+        alert(result.error)
+      }
+      alert("پرمیشن با موفقیت حذف شد")
+    }
     async function updaterole() {
       const roleName = document.getElementById('roleName').value;
       const set_defualt_role = document.getElementById('set_defualt_role').value;

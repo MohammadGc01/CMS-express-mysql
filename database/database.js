@@ -1,13 +1,14 @@
-const logger = require("../services/logger");
+const Logger = require("../services/logger");
 const db = require("./connection");
 
 class database {
   constructor(tablename, feildsname, where, wherevalues, values) {
     this.tablename = tablename;
-    this.feildsname = feildsname;
+    if (feildsname) this.feildsname = feildsname;
     if (where) this.where = where;
     if (wherevalues) this.wherevalues = wherevalues;
     if (values) this.values = values;
+
   }
 
   async SELECT() {
@@ -29,7 +30,7 @@ class database {
         });
       });
     } catch (error) {
-      const log = new logger(
+      const log = new Logger(
         "انجام عملیات SELECT در دیتا بیس به مشکل خورد",
         `پیام خطا : ${error}`,
         "error",
@@ -59,7 +60,7 @@ class database {
         });
       });
     } catch (error) {
-      const log = new logger(
+      const log = new Logger(
         "انجام عملیات INSERT در دیتا بیس به مشکل خورد",
         `پیام خطا : ${error}`,
         "error",
@@ -67,8 +68,39 @@ class database {
       );
       await log.save();
       return {
-        success: true,
-        message: error.message,
+        success: false,
+        error,
+      };
+    }
+  }
+
+  async DELETE() {
+    const sql = `DELETE FROM ${this.tablename} WHERE ${this.where} = ?`;
+    console.log(sql);
+
+    try {
+      return await new Promise((resolve, reject) => {
+        db.query(sql, this.wherevalues, (err, result) => {
+          if (err) return reject(err);
+          return resolve({
+            success: true,
+            result,
+          });
+        });
+      });
+    } catch (error) {
+      const log = new Logger(
+        "انجام عملیات DELETE در دیتا بیس به مشکل خورد",
+        `پیام خطا : ${error}`,
+        "error",
+        "NONE SYSTEM"
+      );
+      await log.save();
+      console.log(error);
+
+      return {
+        success: false,
+        error,
       };
     }
   }

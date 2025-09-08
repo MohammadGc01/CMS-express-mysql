@@ -45,10 +45,14 @@ async function RegisterUser(req, res) {
 
     const sql2 = `INSERT INTO user_role(user_id, role_id) VALUES (?, ?)`;
     const role_insert_result = await new Promise((resolve, reject) => {
-      db.query(sql2, [user_id, role_id.result[0].id], (insertErr, insertResult) => {
-        if (insertErr) return reject(insertErr);
-        resolve(insertResult);
-      });
+      db.query(
+        sql2,
+        [user_id, role_id.result[0].id],
+        (insertErr, insertResult) => {
+          if (insertErr) return reject(insertErr);
+          resolve(insertResult);
+        }
+      );
     });
 
     const log = new logger(
@@ -128,7 +132,7 @@ async function LoginUser(req, res) {
       return;
     }
 
-    const roles = await get_user_role(user);
+    const roles = await get_user_role(user, false);
 
     req.session.user = {
       id: user.id,
@@ -221,20 +225,19 @@ async function deleteRole(req, res) {
   });
 }
 
-async function get_user_role(user) {
-  const roleRow = await new Promise((resolve, reject) => {
-    db.query(
-      "SELECT role_id FROM user_role WHERE user_id = ?",
-      [user.id],
-      (err, result) => {
-        if (err) return reject(err);
-        if (!result.length) return resolve([]);
-        resolve(result);
-      }
-    );
-  });
+async function get_user_role(user, ReturnRoleRow) {
+  const DB = new database(
+    "user_role",
+    ["id", "role_id"],
+    "user_id",
+    user.id,
+    false
+  );
+  const roleRow = await DB.SELECT();
 
-  const roleid = roleRow.map((role) => role.role_id);
+  if (ReturnRoleRow) return roleRow;
+
+  const roleid = roleRow.result.map((role) => role.role_id);
   const placeholders = roleid.map(() => "?").join(",");
   const roleData = await new Promise((resolve, reject) => {
     db.query(
@@ -343,11 +346,10 @@ async function getPrmission(roles) {
   return rows;
 }
 
-async function get_role_all(req, res) {
-  db.query("SELECT * FROM roles", (err, result) => {
-    if (err) return res.json(err);
-    res.json(result);
-  });
+async function get_role_all() {
+  const DB = new database("roles", "*", false, false, false);
+  const result = await DB.SELECT();
+  return result;
 }
 
 async function getRoleById(user_id) {
@@ -372,6 +374,13 @@ async function getPermissionsByRoleId(role_id) {
       }
     );
   });
+}
+
+async function removePerm(req, res) {
+  const id = req.params.id;
+  const DB = new database("role_permission", [] , "id" , id , false );
+  const result = await DB.DELETE();
+  res.json(result);
 }
 
 async function updaterole(req, res) {
@@ -475,8 +484,40 @@ async function change_pass(req, res) {
 }
 
 async function get_all_users() {
-  const DB = new database("users", "username, email , create_time", false , false , false)
-  return await DB.SELECT()
+  const DB = new database(
+    "users",
+    "id,username, email , create_time",
+    false,
+    false,
+    false
+  );
+  return await DB.SELECT();
+}
+
+async function get_user_by_id(id) {
+  const DB = new database("users", " id , username , email", "id", id, false);
+  return await DB.SELECT();
+}
+
+async function update_user(req, res) {
+  const id = req.params.id;
+  const { username, email } = req.body;
+  const sql = `UPDATE users SET username= ? , email= ? WHERE id =?`;
+
+  db.query(sql, [username, email, id], (err, result) => {
+    if (err) {
+      console.log(err);
+
+      return res.json({
+        success: false,
+        message: "مشکلی پیش اومد دوباره امتحان کنید ",
+      });
+    }
+    res.json({
+      success: true,
+      message: "اپدیت انجام شد",
+    });
+  });
 }
 
 module.exports = {
@@ -495,5 +536,8 @@ module.exports = {
   add_perm_role,
   forgot_pass,
   change_pass,
-  get_all_users
+  get_all_users,
+  get_user_by_id,
+  update_user,
+  removePerm,
 };

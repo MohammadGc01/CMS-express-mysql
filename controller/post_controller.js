@@ -48,7 +48,7 @@ async function delete_category(req, res) {
 }
 
 async function delete_sub_category(req ,res) {
-    const {id} = req.body
+    const {id} = req.params
     const sql = "DELETE FROM sub_category WHERE id = ?";
     db.query(sql, id, (err, result) => {
     if (err) return res.json(err);

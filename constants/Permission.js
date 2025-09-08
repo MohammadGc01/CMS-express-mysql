@@ -8,6 +8,7 @@ const Permission = {
   ADD_ROLE: "ADD_ROLE",
   REMOVE_ROLE: "REMOVE_ROLE",
   EDIT_ROLE: "EDIT_ROLE",
+  REMOVE_PERM: "REMOVE_PERM",
 
   VIEW_LOGS: "VIEW_LOGS",
 

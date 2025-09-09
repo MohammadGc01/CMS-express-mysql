@@ -10,24 +10,25 @@ const {
 } = require("../controller/log_controller");
 const { checkPermission } = require("../middleware/checkPermission");
 
-router.get("/", (req, res) => {
-  db.query("SELECT * FROM setting WHERE 1", (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("Error retrieving settings");
-    }
+router.get("/", async (req, res) => {
+  const DB = new database("setting", "*", false, false, false)
+  const result = await DB.SELECT()
+  req.session.setting = {
+    cms_name: result.result[0].cms_name,
+    cms_logo: result.result[0].cms_logo,
+    cms_mailler_service: result.result[0].cms_mailler_service,
+    cms_mailler_user: result.result[0].cms_mailler_user,
+    cms_mailler_pass: result.result[0].cms_mailler_pass,
+    ShowAds: result.result[0].ShowAds,
+  };
 
-    req.session.setting = {
-      cms_name: result[0].cms_name,
-      cms_logo: result[0].cms_logo,
-      ShowAds: result[0].ShowAds,
-    };
-
-    res.render("home", {
-      title: req.session.setting.cms_name,
-      css: "home.css",
-      setting: req.session.setting,
-    });
+  
+  
+  res.render("home", {
+    title: req.session.setting.cms_name,
+    cms_logo: req.session.setting.cms_logo,
+    user: req.session.user || {},
+    css : "home.css",
   });
 });
 
@@ -35,6 +36,7 @@ router.get("/", (req, res) => {
 const multer = require("multer");
 const db = require("../database/connection");
 const database = require("../database/database");
+const { title } = require("process");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

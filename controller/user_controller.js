@@ -1,15 +1,16 @@
 const db = require("../database/connection");
 const bcrypt = require("bcrypt");
-const logger = require("../services/logger");
+const Logger = require("../services/Logger");
 const mailler = require("../services/mailler");
 const database = require("../database/database");
 require("dotenv").config();
+
 
 async function RegisterUser(req, res) {
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
-    const log = new logger(
+    const log = new Logger(
       "ثبت نام ناموفق",
       `یوزری درخواست ثبت نام به سرور فرستاد اما هیچ بدنه ای نداشت`,
       "warn",
@@ -23,61 +24,66 @@ async function RegisterUser(req, res) {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
+  const sql = `INSERT INTO users( username, email, password) VALUES (?, ?, ?)`;
 
-  const sql = `INSERT INTO users(username, email, password) VALUES (?, ?, ?)`;
+  db.query(
+    sql,
+    [ username, email, hashPassword],
+    async (err, result) => {
+      if (err) {
+        console.log(err);
 
-  db.query(sql, [username, email, hashPassword], async (err, result) => {
-    if (err) {
-      const log = new logger(
-        `ثبت نام ناموفق :  ${err.name} `,
-        `موقع query زدن برای ثبت نام مشکلی به وجود اومد پیام خطا : ${err.message}`,
-        "error",
+        const log = new Logger(
+          `ثبت نام ناموفق :  ${err.name} `,
+          `موقع query زدن برای ثبت نام مشکلی به وجود اومد پیام خطا : ${err.message}`,
+          "error",
+          req.ip
+        );
+        await log.save();
+        return res.status(500).send("ثبت‌ نام با مشکل مواجه شد");
+      }
+
+      const DataBase = new database("roles", "*", "set_defualt_role", 1, false);
+      const role_id = await DataBase.SELECT();
+
+      const user_id = result.insertId;
+
+      const sql2 = `INSERT INTO user_role(user_id, role_id) VALUES (?, ?)`;
+      const role_insert_result = await new Promise((resolve, reject) => {
+        db.query(
+          sql2,
+          [user_id, role_id.result[0].id],
+          (insertErr, insertResult) => {
+            if (insertErr) return reject(insertErr);
+            resolve(insertResult);
+          }
+        );
+      });
+
+      const log = new Logger(
+        "ثبت نام",
+        `کاربری با ایمیل : ${email} و نام کاربری :  ${username} ثبت نام کرد`,
+        "success",
         req.ip
       );
       await log.save();
-      return res.status(500).send("ثبت‌ نام با مشکل مواجه شد");
+
+      const mail = new mailler(email, `ثبت نام`, `ثبت نام شما موفقیت انجام شد`);
+      await mail.send();
+
+      res.json({
+        success: true,
+        message: "ثبت‌نام با موفقیت انجام شد",
+      });
     }
-
-    const DataBase = new database("roles", "*", "set_defualt_role", 1, false);
-    const role_id = await DataBase.SELECT();
-
-    const user_id = result.insertId;
-
-    const sql2 = `INSERT INTO user_role(user_id, role_id) VALUES (?, ?)`;
-    const role_insert_result = await new Promise((resolve, reject) => {
-      db.query(
-        sql2,
-        [user_id, role_id.result[0].id],
-        (insertErr, insertResult) => {
-          if (insertErr) return reject(insertErr);
-          resolve(insertResult);
-        }
-      );
-    });
-
-    const log = new logger(
-      "ثبت نام",
-      `کاربری با ایمیل : ${email} و نام کاربری :  ${username} ثبت نام کرد`,
-      "success",
-      req.ip
-    );
-    await log.save();
-
-    const mail = new mailler(email, `ثبت نام`, `ثبت نام شما موفقیت انجام شد`);
-    await mail.send();
-
-    res.json({
-      success: true,
-      message: "ثبت‌نام با موفقیت انجام شد",
-    });
-  });
+  );
 }
 
 async function LoginUser(req, res) {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    const log = new logger(
+    const log = new Logger(
       " ورود ناموفق",
       `یوزری درخواست ورود به سرور فرستاد اما هیچ بدنه ای نداشت`,
       "warn",
@@ -90,7 +96,7 @@ async function LoginUser(req, res) {
   const sql = "SELECT * FROM users WHERE email = ?";
   db.query(sql, email, async (err, result) => {
     if (err) {
-      const log = new logger(
+      const log = new Logger(
         `ورود  ناموفق :  ${err.name} `,
         `موقع query زدن برای  ورود مشکلی به وجود اومد پیام خطا : ${err.message}`,
         "error",
@@ -102,7 +108,7 @@ async function LoginUser(req, res) {
     }
 
     if (result.length === 0) {
-      const log = new logger(
+      const log = new Logger(
         "ورود ناموفق",
         `یوزری درخواست ورود ثبت کرد ولی حسابی با این ${email} ایمیل در دیتا بیس نبود`,
         "info",
@@ -119,7 +125,7 @@ async function LoginUser(req, res) {
     const user = result[0];
     const hashPassword = await bcrypt.compare(password, user.password);
     if (!hashPassword) {
-      const log = new logger(
+      const log = new Logger(
         "ورود کاربر",
         `کاربر با ایمیل ${email} درخواست ورود انجام فرستاد اما پسوردش اشتباه بود`,
         "info",
@@ -145,7 +151,7 @@ async function LoginUser(req, res) {
     req.session.cookie.expires = new Date(Date.now() + hour);
     req.session.cookie.maxAge = hour;
 
-    const log = new logger(
+    const log = new Logger(
       "ورود موفق",
       `ورود موفق کاربر ${user.username}`,
       "success",
@@ -177,7 +183,7 @@ async function createRole(req, res) {
   const sql = "INSERT INTO roles(name) VALUES (?)";
   db.query(sql, [name], async (err, result) => {
     if (err) {
-      const log = new logger(
+      const log = new Logger(
         "ایجاد نقش",
         `خطا در هنگام ایجاد نقش: ${err.message}`,
         "error",
@@ -190,7 +196,7 @@ async function createRole(req, res) {
       });
     }
 
-    const log = new logger(
+    const log = new Logger(
       "ایجاد نقش",
       `نقش جدید با نام ${name} ایجاد شد`,
       "success",
@@ -234,7 +240,8 @@ async function get_user_role(user, ReturnRoleRow) {
     false
   );
   const roleRow = await DB.SELECT();
-
+  console.log(roleRow);
+  
   if (ReturnRoleRow) return roleRow;
 
   const roleid = roleRow.result.map((role) => role.role_id);
@@ -378,7 +385,7 @@ async function getPermissionsByRoleId(role_id) {
 
 async function removePerm(req, res) {
   const id = req.params.id;
-  const DB = new database("role_permission", [] , "id" , id , false );
+  const DB = new database("role_permission", [], "id", id, false);
   const result = await DB.DELETE();
   res.json(result);
 }

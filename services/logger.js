@@ -1,4 +1,3 @@
-const { save_to_database } = require("../controller/log_controller");
 
 class Logger {
   constructor(title, message, level, ip) {
@@ -9,6 +8,8 @@ class Logger {
   }
 
   async save() {
+const { save_to_database } = require("../controller/log_controller");
+
     await save_to_database(this.title, this.message, this.level, this.ip);
   }
 }

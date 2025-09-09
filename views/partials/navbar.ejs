@@ -1,149 +1,91 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary  shadow">
+<nav class="navbar navbar-expand-lg bg-body-tertiary shadow p-3">
   <div class="container-fluid">
-        <a class="navbar-brand" href="/">
-          <%= setting.cms_name%>
-        </a>
+    <a class="navbar-brand" href="/">
+      <%= title %>
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="/"> <i class="bi bi-house"></i> صفحه اصلی </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#"> <i class="bi bi-people"></i> انجمن </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/contactus"> <i class="bi bi-telephone"></i> ارتباط با ما </a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-list"></i> دسته بندی
-          </a>
-          <ul class="dropdown-menu " id="dropdown-menu">
-
-          </ul>
-        </li>
-      </ul>
-      <ul class="d-flex">
-        <li class="icon">
-          <a href="/user/auth"><i class="bi bi-person"></i></a>
-        </li>
-        <li class="icon">
-          <i class="bi bi-search"></i>
-        </li>
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0" id="category_result">
       </ul>
 
+      <ul class="nav nav-pills nav-fill d-md-none d-lg-flex">
+
+      <li class="nav-item">
+        <button class="btn btn-outline-warning rounded-5" aria-current="page" href="#">
+          <i class="bi bi-search fs-6"></i>
+        </button>
+      </li>
+
+        <li class="nav-item me-2">
+          <% if (user) { %>
+            <a class="btn btn-outline-warning rounded-5 d-flex" aria-current="page" href="/user/panel">
+              <i class="bi bi-person fs-6"></i>
+              <%= user.username %>
+            </a>
+            <% } else { %>
+              <a class="btn btn-outline-warning rounded-5" aria-current="page" href="/user/auth">
+                <i class="bi bi-person fs-4"></i>
+              </a>
+              <% } %>
+        </li>
+        
+  
+
+
+
+      </ul>
     </div>
   </div>
 </nav>
 
-<style>
-  .navbar {
-    background-color: #00000000 !important;
-    padding: 20px;
-    font-size: 17px;
-  }
+<script type="module">
+  async function loadCategories() {
+    try {
+      const result_cat = await fetch("/post/get/categorys");
+      const data_cat = await result_cat.json();
 
-  .navbar-brand {
-    color: rgb(0, 195, 255) !important;
-    font-weight: bold;
-    font-size: 20px;
-  }
+      const result_sub_cat = await fetch("/post/get/sub/categorys");
+      const data_sub_cat = await result_sub_cat.json();
 
-  .nav-link {
-    color: rgb(255, 255, 255) !important;
-    padding-left: 40px !important;
-  }
+      const category_result = document.getElementById('category_result');
 
-  .nav-link i {
-    color: rgb(0, 195, 255);
-    font-size: 20px;
-  }
+      data_cat.forEach(category => {
+        const li = document.createElement('li');
+        li.classList.add('nav-item', 'dropdown');
 
-  .icon {
-    border-color: rgb(0, 195, 255);
-    border-style: solid;
-    border-width: 1px;
-    padding: 5px;
-    width: 42px;
-    border-radius: 20px;
-    list-style: none;
-    color: rgb(0, 195, 255) !important;
-    cursor: pointer;
-    margin-right: 15px;
-  }
+        const a = document.createElement('a');
+        a.classList.add('nav-link', 'dropdown-toggle');
+        a.href = "#";
+        a.setAttribute('role', 'button');
+        a.setAttribute('data-bs-toggle', 'dropdown');
+        a.textContent = category.name;
 
-  .icon a {
-    color: rgb(0, 195, 255) !important;
-  }
+        const ul = document.createElement('ul');
+        ul.classList.add('dropdown-menu');
 
-  .icon i {
-    font-size: 20px;
-    margin-right: 5px;
-  }
+        const subs = data_sub_cat.filter(sub => sub.category_id === category.id);
 
-  .dropdown-menu {
-    background-color: #111;
-    border-radius: 8px;
-    min-width: 200px;
-  }
+        subs.forEach(sub => {
+          const subLi = document.createElement('li');
+          const subA = document.createElement('a');
+          subA.classList.add('dropdown-item');
+          subA.href = `/post/sub_category/${sub.id}`;
+          subA.textContent = sub.name;
+          subLi.appendChild(subA);
+          ul.appendChild(subLi);
+        });
 
-  .dropdown-item {
-    color: white !important;
-    transition: background 0.2s ease;
-    text-align: center;
-  }
-
-  .dropdown-item:hover {
-    background-color: aquamarine;
-    color: black !important;
-  }
-
-  @media (max-width: 768px) {
-    .navbar-nav {
-      margin-top: 15px;
-    }
-
-    .nav-link {
-      margin: 10px 0;
-    }
-
-    .navbar-icons {
-      justify-content: center;
-      width: 100%;
-      margin-top: 10px;
+        li.appendChild(a);
+        li.appendChild(ul);
+        category_result.appendChild(li);
+      });
+    } catch (error) {
+      console.error("Error loading categories:", error);
     }
   }
-</style>
 
-
-
-
-
-<script>
-  async function get_category() {
-    const dropdown_menu = document.getElementById('dropdown-menu')
-    const result = await fetch('/post/get/categorys', {
-      method: "GET",
-    })
-
-    const categorys = await result.json()
-    categorys.forEach(category => {
-      const item = document.createElement('li')
-      const item_href = document.createElement('a')
-      const hr = document.createElement('hr')
-      hr.classList.add('dropdown-divider')
-      item_href.classList.add('dropdown-item')
-      item.appendChild(item_href)
-      item.appendChild(hr)
-      dropdown_menu.appendChild(item)
-      item_href.setAttribute('href', `/post/category/${category.name}`)
-      item_href.innerText = category.name
-    });
-  }
-
-  get_category()
+  loadCategories();
 </script>

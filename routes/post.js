@@ -8,6 +8,7 @@ const { get_categorys, add_category, get_sub_categorys,
 const { authentication, authorization } = require("../middleware/auth");
 const Permissions = require("../constants/Permission");
 const { checkPermission } = require("../middleware/checkPermission");
+const { route } = require("./user");
 
 const router = require("express").Router();
 

@@ -28,6 +28,48 @@ const router = require("express").Router();
 
 
 
+// upload profile
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/images/');
+  },
+  filename: function (req, file, cb) {
+    // ایمیل کاربر از سشن
+    const rawEmail = req.session.user.email;
+
+    // پاک‌سازی ایمیل برای استفاده در نام فایل
+
+    // گرفتن پسوند فایل اصلی
+    const ext = path.extname(file.originalname);
+
+    // تنظیم نام فایل نهایی
+    const finalName = `${rawEmail}${ext}`;
+    const filePath = path.join('public/images/', finalName);
+    if(fs.existsSync(filePath)){
+      fs.unlinkSync(filePath)
+    }
+
+    cb(null, finalName);
+  }
+});
+const upload = multer({ storage });
+router.post('/upload/images', authentication,  upload.single('myfile'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'هیچ فایلی آپلود نشد' });
+  }
+
+  res.json({
+    message: 'آپلود با موفقیت انجام شد',
+    filename: req.file.filename,
+    url: `/images/${req.file.filename}`
+  });
+});
+// upload profile
+
+
 
 
 
@@ -48,11 +90,7 @@ router.get('/panel', authentication, async (req , res) => {
   if (canAccess) {
    return res.render('admin_panel', {user : req.session.user , permissions : permname})
   }
-
-  
-  res.render("user_panel", {
-    user: req.session.user,
-  });
+  res.render('user_panel', {user : req.session.user})
 })
 
 router.post("/login", LoginUser);

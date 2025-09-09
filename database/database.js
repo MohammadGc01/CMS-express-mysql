@@ -1,4 +1,4 @@
-const Logger = require("../services/Logger");
+const Logger = require("../services/logger");
 const db = require("./connection");
 
 class database {
@@ -8,6 +8,7 @@ class database {
     if (where) this.where = where;
     if (wherevalues) this.wherevalues = wherevalues;
     if (values) this.values = values;
+
   }
 
   async SELECT() {
